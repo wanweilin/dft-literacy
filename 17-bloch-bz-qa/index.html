@@ -1,0 +1,3757 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="TritonDFT / DFTBench 学习笔记">
+      
+      
+        <meta name="author" content="Weilin Wan">
+      
+      
+      
+        <link rel="prev" href="../17-bloch-bz/">
+      
+      
+        <link rel="next" href="../18-plane-wave-basis/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>化简 7 QA - DFT 扫盲笔记</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#17-bloch-bz" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="DFT 扫盲笔记" class="md-header__button md-logo" aria-label="DFT 扫盲笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DFT 扫盲笔记
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              化简 7 QA
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../00-simplification-chain/" class="md-tabs__link">
+          
+  
+  
+  总览
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../10-qm-basics/" class="md-tabs__link">
+          
+  
+  
+  QM 基础
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../11-born-oppenheimer/" class="md-tabs__link">
+          
+  
+  
+  电子结构核心
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../16-pseudopotential/" class="md-tabs__link">
+          
+  
+  
+  数值实现
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../30-observables/" class="md-tabs__link">
+          
+  
+  
+  物性与材料
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../99-dftbench-terms/" class="md-tabs__link">
+          
+  
+  
+  反查与自测
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DFT 扫盲笔记" class="md-nav__button md-logo" aria-label="DFT 扫盲笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DFT 扫盲笔记
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    总览
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    总览
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-simplification-chain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简链总图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-simplification-chain-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简链 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-keywords-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关键词索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM 基础
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    QM 基础
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-qm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    量子力学前置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-qm-basics-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM 基础 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    电子结构核心
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    电子结构核心
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-born-oppenheimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 1 Born-Oppenheimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-born-oppenheimer-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 1 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-slater-determinant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 2 Slater 行列式
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-slater-determinant-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 2 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-hk-theorem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 3 HK 定理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-hk-theorem-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 3 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-kohn-sham/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 4 Kohn-Sham
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-kohn-sham-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 4 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-xc-functional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 5 XC 泛函
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-xc-functional-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 5 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数值实现
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    数值实现
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-pseudopotential/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 6 赝势
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-pseudopotential-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 6 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-bloch-bz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 Bloch 与 BZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 QA
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#q5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        背景——这些概念为什么突然出现？（回答 Q5 的结构性困惑）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="背景——这些概念为什么突然出现？（回答 Q5 的结构性困惑）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么非得引入这些
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1：平移算符、对易、本征态——"直觉像天书"
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q1：平移算符、对易、本征态——&#34;直觉像天书&#34;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        音乐类比：无限重复的旋律
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        翻译成物理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三个抽象词的大白话
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ML 类比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q2veck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2：\(\vec{k}\) 哪里来？代表什么？布里渊区是什么？
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q2：\(\vec{k}\) 哪里来？代表什么？布里渊区是什么？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#veck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        \(\vec{k}\) 的来源
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veck_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        \(\vec{k}\) 的物理意义（钟表类比）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veck_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        \(\vec{k}\) 能取什么值——两层约束
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        连续还是离散？
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3：倒格矢不通俗
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q3：倒格矢不通俗">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        用傅里叶级数类比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3d-3d" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3D 晶体就是这件事的 3D 版
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        具体例子：立方晶格
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么有用
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q4bz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4：BZ 和倒格点间距的关系
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q4：BZ 和倒格点间距的关系">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        精确关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        大小/尺寸
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        有趣推论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        钟表类比（再用一次）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q5bloch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5：为什么突然有这么多新词？（周期势、本征态、Bloch 波、晶体动量）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q5：为什么突然有这么多新词？（周期势、本征态、Bloch 波、晶体动量）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "不就是周期结构吗，何必这么复杂？"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        对照之前章节
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q6k-k-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q6：k 点是"有 k 个点"还是"有一个点叫 k"？
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q6：k 点是&#34;有 k 个点&#34;还是&#34;有一个点叫 k&#34;？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        澄清命名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        具体例子
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QE 输出中典型的一行
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "k 点" 命名的历史
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        用音乐类比一次性串起来（总复习）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="用音乐类比一次性串起来（总复习）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景：无限长的周期音乐
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本轮 6 个问题速览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q7：在布里渊区视角下，我们具体要算什么？和前面几步的关系是什么？
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q7：在布里渊区视角下，我们具体要算什么？和前面几步的关系是什么？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloch-dft-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        全局图景：Bloch 把 DFT 每一步"按 k 分块"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        两个层次的计算
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        重要澄清（针对追问）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自由电子类比（最能说明问题）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        钟表类比的精确界限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结：核心纠正
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ml_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ML 类比（一次说清）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一张图总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ 倒空间 ≈ 频率空间（更精确：空间频率空间）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ BZ ≈ 独立频率的范围（奈奎斯特区类比）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ 对每个频率的物性积分
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一个重要补充：倒空间里有两种"频率"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        精确技术区别
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ml_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ML 类比：两种信息分离
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        完整波函数怎么体现这两种频率
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qe_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在 QE 输入里的直接对应
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结：两种频率的本质区别
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veck_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        关键差别：每个 \(\vec{k}\) 不只是"一个傅里叶系数"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        完整类比表（信号处理 ↔ 晶体 DFT）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        和前面化简的具体对应
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dft-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        把整个 DFT 流程串起来（"k 分块视图"）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么这么设计关键
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qe-scf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QE 一次 SCF 迭代的样子
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bz_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BZ 积分的物理意义（举例）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        简洁总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本轮 7 个问题速览（更新）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-plane-wave-basis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 8 平面波基组
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-kpoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 k 点采样
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-kpoints-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-symmetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 10 对称性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-scf-iteration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 11 SCF 迭代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-bfgs-relax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 12 BFGS 弛豫
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    物性与材料
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    物性与材料
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-observables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DFT 输出物性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-observables-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DFT 输出物性 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../31-material-categories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 大材料类别
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反查与自测
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反查与自测
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../99-dftbench-terms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字段反查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../99-self-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    自测题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="17-bloch-bz">17-bloch-bz 问答笔记<a class="headerlink" href="#17-bloch-bz" title="Permanent link">&para;</a></h1>
+<p>源文件：<a href="../17-bloch-bz/"><code>17-bloch-bz.md</code></a></p>
+<blockquote>
+<p>这一篇源文件讲得数学术语密集。QA 文件用<strong>音乐/钟表/连续信号</strong>的通俗类比从零重讲一遍。如果读完觉得之前章节的抽象部分清晰了，说明类比起作用了。</p>
+</blockquote>
+<hr />
+<h2 id="q5">背景——这些概念为什么突然出现？（回答 Q5 的结构性困惑）<a class="headerlink" href="#q5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>原文：<em>"周期势，本征态，Bloch 波，晶体动量——这些内容之前的几个文档都没出现过"</em></p>
+</blockquote>
+<p>你的观察完全正确。化简 1–6 都在讲"有 N 个电子 + M 个原子核的量子问题"，<strong>没有限定</strong>这是分子还是晶体。到了化简 7，第一次明确"我们要算的是<strong>无限大晶体</strong>"——所以必须引入专门描述周期结构的工具：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>为什么化简 7 才出现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>周期势 <span class="arithmatex">\(V(\vec{r}+\vec{R})=V(\vec{r})\)</span></td>
+<td>化简 1–6 只假设核在某个位置上，没要求"周期排列"；直到我们要算晶体才需要</td>
+</tr>
+<tr>
+<td>Bloch 波</td>
+<td>描述"电子在周期排列的原子核中"的专用波函数形式</td>
+</tr>
+<tr>
+<td>晶体动量 <span class="arithmatex">\(\vec{k}\)</span></td>
+<td>Bloch 波的"身份证号"，给每个电子态打一个标签</td>
+</tr>
+<tr>
+<td>布里渊区 (BZ)</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 能取的范围</td>
+</tr>
+<tr>
+<td>倒格矢 <span class="arithmatex">\(\vec{G}\)</span></td>
+<td>倒空间（频率空间）的"晶格"，和 BZ 配套</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_1">为什么非得引入这些<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>前面我们说 1 cm³ 硅有 <span class="arithmatex">\(10^{23}\)</span> 个电子——直接解 <span class="arithmatex">\(10^{23}\)</span> 维矩阵不可能。但<strong>晶体有结构</strong>：它不是一堆随机放置的原子，而是一个原胞在空间里严格重复。</p>
+<p>Bloch 定理的作用就是<strong>利用这个周期性把 <span class="arithmatex">\(10^{23}\)</span> 维问题拆成 <span class="arithmatex">\(\sim 30\)</span> 个"每个原胞"级别的小问题</strong>，每个小问题只涉及一个原胞里的原子。</p>
+<p>这种利用对称性拆分问题的思路，正是化简 7 全部的目的。</p>
+<hr />
+<h2 id="q1">Q1：平移算符、对易、本征态——"直觉像天书"<a class="headerlink" href="#q1" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>原文：<em>"如果 <span class="arithmatex">\(\hat{H}\)</span> 和所有晶格平移算符 <span class="arithmatex">\(\hat{T}_{\vec{R}}\)</span> 对易..."</em></p>
+</blockquote>
+<p>这段的<strong>所有术语</strong>都可以用大白话重讲。先把数学词翻译成直觉，再回头看原文：</p>
+<h3 id="_2">音乐类比：无限重复的旋律<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>想象一个<strong>无限长的周期音乐</strong>——一个 4 拍小节，然后完全一样的下一个小节，再下一个……永远重复。</p>
+<p>现在问你：<strong>什么样的"音波"在这段音乐里是"稳定"的？</strong></p>
+<p>答案：这个音波必须满足——<strong>挪动一个小节之后，它除了一个相位外没有任何变化</strong>。</p>
+<p>因为如果"挪一个小节变了别的样子"，那说明音乐不是周期的——但我们假设它是。所以稳定音波必须是"周期不变模一个相位"的。</p>
+<h3 id="_3">翻译成物理<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>把上面每一项翻译：</p>
+<table>
+<thead>
+<tr>
+<th>音乐</th>
+<th>物理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无限长的周期音乐</td>
+<td>无限大的周期晶体</td>
+</tr>
+<tr>
+<td>一个小节</td>
+<td>一个原胞</td>
+</tr>
+<tr>
+<td>音波</td>
+<td>电子波函数 <span class="arithmatex">\(\psi(\vec{r})\)</span></td>
+</tr>
+<tr>
+<td>"挪一个小节"</td>
+<td>晶格平移算符 <span class="arithmatex">\(\hat{T}_{\vec{R}}\)</span>（把 <span class="arithmatex">\(\psi(\vec{r})\)</span> 变成 <span class="arithmatex">\(\psi(\vec{r}+\vec{R})\)</span>）</td>
+</tr>
+<tr>
+<td>"能量稳定的音波"</td>
+<td>哈密顿量 <span class="arithmatex">\(\hat{H}\)</span> 的本征态（<span class="arithmatex">\(\hat{H}\psi = E\psi\)</span>）</td>
+</tr>
+<tr>
+<td>"挪一个小节除了相位没变"</td>
+<td><span class="arithmatex">\(\psi(\vec{r}+\vec{R}) = e^{i\vec{k}\cdot\vec{R}} \psi(\vec{r})\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">三个抽象词的大白话<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>"对易"</strong>：<span class="arithmatex">\(\hat{H}\hat{T} = \hat{T}\hat{H}\)</span>——"先算能量再挪"和"先挪再算能量"结果一样。</li>
+<li>
+<p>为什么成立？因为晶体<strong>处处一样</strong>，电子在这里和在挪过去那里的能量相同。所以能量算符不关心挪没挪。</p>
+</li>
+<li>
+<p><strong>"共同本征态"</strong>：一个波函数 <span class="arithmatex">\(\psi\)</span> 同时满足：</p>
+</li>
+<li><span class="arithmatex">\(\hat{H}\psi = E\psi\)</span>（能量稳定）</li>
+<li><span class="arithmatex">\(\hat{T}_{\vec{R}}\psi = \lambda_{\vec{R}}\psi\)</span>（挪一下只差一个因子 <span class="arithmatex">\(\lambda_{\vec{R}}\)</span>）</li>
+<li>
+<p><strong>数学事实</strong>：如果两个算符对易，它们<strong>可以找到共同本征态</strong>（线性代数标准结论）</p>
+</li>
+<li>
+<p><strong>"本征值必然是相位 <span class="arithmatex">\(e^{i\vec{k}\cdot\vec{R}}\)</span>"</strong>：因为</p>
+</li>
+<li>平移算符是幺正的（<span class="arithmatex">\(|\hat{T}\psi|^2 = |\psi|^2\)</span>，挪动不改变概率分布）</li>
+<li>幺正算符的本征值<strong>模必须等于 1</strong></li>
+<li>所以只能是 <span class="arithmatex">\(e^{i\phi_{\vec{R}}}\)</span> 的形式</li>
+<li>再考虑两次挪动 <span class="arithmatex">\(\hat{T}_{2\vec{R}} = \hat{T}_{\vec{R}}^2\)</span>，得出 <span class="arithmatex">\(\phi_{2\vec{R}} = 2\phi_{\vec{R}}\)</span>，所以 <span class="arithmatex">\(\phi_{\vec{R}}\)</span> 必须线性于 <span class="arithmatex">\(\vec{R}\)</span> → <span class="arithmatex">\(\phi_{\vec{R}} = \vec{k}\cdot\vec{R}\)</span></li>
+</ul>
+<p>所以原文那段话的意思<strong>翻译成大白话</strong>就是：</p>
+<blockquote>
+<p>因为晶体处处一样，能量稳定的电子波函数在挪一个晶胞后只能<strong>差一个纯相位</strong>。这个相位可以用一个 3 维向量 <span class="arithmatex">\(\vec{k}\)</span> 概括——它成为每个电子态的"标签"。</p>
+</blockquote>
+<h3 id="ml">ML 类比<a class="headerlink" href="#ml" title="Permanent link">&para;</a></h3>
+<p>"<span class="arithmatex">\(\hat{H}\)</span> 与 <span class="arithmatex">\(\hat{T}\)</span> 对易" ≈ <strong>等变 NN</strong>：
+- 对图像做旋转 <span class="arithmatex">\(R\)</span> 后，CNN 不会改变结果（translation equivariant）
+- 其实就是 <span class="arithmatex">\(\text{CNN}(R(x)) = R(\text{CNN}(x))\)</span>——交换顺序不影响
+- Bloch 定理是"电子波函数必须对平移对称性等变"的结论</p>
+<hr />
+<h2 id="q2veck">Q2：<span class="arithmatex">\(\vec{k}\)</span> 哪里来？代表什么？布里渊区是什么？<a class="headerlink" href="#q2veck" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>原文：<em>"<span class="arithmatex">\(\vec{k}\)</span> 成为一个连续变量，取值范围就是第一布里渊区"</em></p>
+</blockquote>
+<h3 id="veck"><span class="arithmatex">\(\vec{k}\)</span> 的来源<a class="headerlink" href="#veck" title="Permanent link">&para;</a></h3>
+<p>就是上面说的"挪动一个晶胞后波函数差的相位"：</p>
+<div class="arithmatex">\[\psi(\vec{r} + \vec{R}) = e^{i\vec{k}\cdot\vec{R}} \psi(\vec{r})\]</div>
+<p><strong>每个 Bloch 电子态都带一个 <span class="arithmatex">\(\vec{k}\)</span> 作为标签</strong>。不同的 <span class="arithmatex">\(\vec{k}\)</span> 对应不同的"相位随空间变化模式"的电子态。</p>
+<h3 id="veck_1"><span class="arithmatex">\(\vec{k}\)</span> 的物理意义（钟表类比）<a class="headerlink" href="#veck_1" title="Permanent link">&para;</a></h3>
+<p>想象你站在晶体里，向 <span class="arithmatex">\(\vec{R}\)</span> 方向走一步（一个原胞）。波函数会"转"一个角度 <span class="arithmatex">\(\vec{k}\cdot\vec{R}\)</span>。</p>
+<ul>
+<li>如果 <span class="arithmatex">\(\vec{k} = 0\)</span>（Gamma 点 Γ）：波函数在每个原胞都<strong>完全一样</strong>——最"静态"</li>
+<li>如果 <span class="arithmatex">\(\vec{k}\)</span> 大：每走一个原胞波函数转一大圈——"相位变化快"</li>
+<li><span class="arithmatex">\(\vec{k}\)</span> 就是<strong>每走一米相位转多少</strong>的速率（单位 rad/m 或 <span class="arithmatex">\(\text{Å}^{-1}\)</span>）</li>
+</ul>
+<p><strong>为什么叫"晶体动量"</strong>：
+- 自由电子的平面波 <span class="arithmatex">\(\psi = e^{i\vec{p}\cdot\vec{r}/\hbar}\)</span> 里，<span class="arithmatex">\(\vec{p}\)</span> 是<strong>真正的动量</strong>
+- Bloch 波 <span class="arithmatex">\(\psi = e^{i\vec{k}\cdot\vec{r}} u(\vec{r})\)</span> 里，<span class="arithmatex">\(\vec{k}\)</span> 起<strong>类似作用</strong>但不完全是动量
+- 因为 <span class="arithmatex">\(u(\vec{r})\)</span> 也会贡献动量算符的作用
+- 所以叫 "crystal momentum"——"晶体版本的动量"，有动量的部分性质（守恒、能量-动量关系），但不是严格动量</p>
+<h3 id="veck_2"><span class="arithmatex">\(\vec{k}\)</span> 能取什么值——两层约束<a class="headerlink" href="#veck_2" title="Permanent link">&para;</a></h3>
+<p><strong>约束 1：周期性等价</strong></p>
+<p>如果你把 <span class="arithmatex">\(\vec{k}\)</span> 换成 <span class="arithmatex">\(\vec{k} + \vec{G}\)</span>（<span class="arithmatex">\(\vec{G}\)</span> 是倒格矢），物理上是<strong>一样</strong>的态。为什么？</p>
+<p>回忆 <span class="arithmatex">\(\psi(\vec{r}+\vec{R}) = e^{i\vec{k}\cdot\vec{R}} \psi(\vec{r})\)</span>。换成 <span class="arithmatex">\(\vec{k}' = \vec{k}+\vec{G}\)</span>：</p>
+<div class="arithmatex">\[e^{i\vec{k}'\cdot\vec{R}} = e^{i\vec{k}\cdot\vec{R}} \cdot e^{i\vec{G}\cdot\vec{R}}\]</div>
+<p>而 <span class="arithmatex">\(\vec{G}\cdot\vec{R} = 2\pi \times \text{整数}\)</span>（倒格矢的定义），所以 <span class="arithmatex">\(e^{i\vec{G}\cdot\vec{R}} = 1\)</span>。两个 <span class="arithmatex">\(\vec{k}\)</span> 给出<strong>相同的平移相位</strong>，物理上等价。</p>
+<p><strong>钟表类比</strong>：
+- 钟表的 13 点和 1 点是同一个指针位置（<span class="arithmatex">\(13 \mod 12 = 1\)</span>）
+- <span class="arithmatex">\(\vec{k}\)</span> 和 <span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 是同一个"相位速率"（"模倒格矢"等价）</p>
+<p><strong>约束 2：只取一个代表——布里渊区</strong></p>
+<p>既然 <span class="arithmatex">\(\vec{k}\)</span> 和 <span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 等价，<strong>每个等价类只需取一个代表</strong>。怎么取？</p>
+<p><strong>第一布里渊区（First Brillouin Zone, BZ）</strong> = 最自然的代表区：
+- 以原点 <span class="arithmatex">\(\vec{k}=0\)</span> 为中心
+- 边界是所有最近邻倒格点的中垂面围成的区域
+- 这个区域里每个点都是<strong>不等价</strong>的，互相不能用 <span class="arithmatex">\(\vec{G}\)</span> 平移变到
+- BZ 外的任何点都等价于 BZ 内的某个点</p>
+<p><strong>钟表类比</strong>：
+- 把 0–12 小时当成"BZ"——这里每个值都不重复
+- 13, 14 等价于 1, 2——虽然能表达但是重复
+- 所以只需要在 0–12 里标时间</p>
+<h3 id="_5">连续还是离散？<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>严格无限晶体 → <span class="arithmatex">\(\vec{k}\)</span> 在 BZ 内<strong>连续</strong>取值（无穷多 k 点）。</p>
+<p>但有限超胞（Born-von Kármán 边界，<span class="arithmatex">\(N_1 \times N_2 \times N_3\)</span> 个原胞）→ <span class="arithmatex">\(\vec{k}\)</span> 只在 BZ 内离散取 <span class="arithmatex">\(N_1 N_2 N_3\)</span> 个值。</p>
+<p>实际计算：取<strong>有限 k 点采样</strong>近似连续积分——就是化简 9 的事。</p>
+<hr />
+<h2 id="q3">Q3：倒格矢不通俗<a class="headerlink" href="#q3" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>原文：<em>"<span class="arithmatex">\(\vec{b}_i\)</span> 满足 <span class="arithmatex">\(\vec{a}_i\cdot\vec{b}_j = 2\pi\delta_{ij}\)</span>"</em></p>
+</blockquote>
+<h3 id="_6">用傅里叶级数类比<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>你应该熟悉傅里叶级数：
+- 一个周期 <span class="arithmatex">\(T\)</span> 的信号 <span class="arithmatex">\(f(t+T)=f(t)\)</span> 可以展开为：
+$<span class="arithmatex">\(f(t) = \sum_n c_n e^{i \cdot n\omega_0 \cdot t}\)</span>$
+其中 <span class="arithmatex">\(\omega_0 = 2\pi/T\)</span> 是<strong>基频</strong>，<span class="arithmatex">\(n\omega_0\)</span> 是允许的频率（基频的整数倍）</p>
+<ul>
+<li>"允许的频率集合" = <span class="arithmatex">\(\{0, \pm\omega_0, \pm 2\omega_0, \ldots\}\)</span>——是一维的<strong>离散网格</strong></li>
+</ul>
+<h3 id="3d-3d">3D 晶体就是这件事的 3D 版<a class="headerlink" href="#3d-3d" title="Permanent link">&para;</a></h3>
+<p><strong>晶格周期</strong>：实空间有三个周期向量 <span class="arithmatex">\(\vec{a}_1, \vec{a}_2, \vec{a}_3\)</span>（原胞基矢），任何函数满足 <span class="arithmatex">\(f(\vec{r}+\vec{R})=f(\vec{r})\)</span>（<span class="arithmatex">\(\vec{R}=n_1\vec{a}_1+n_2\vec{a}_2+n_3\vec{a}_3\)</span>）。</p>
+<p><strong>傅里叶展开</strong>：
+$<span class="arithmatex">\(f(\vec{r}) = \sum_{\vec{G}} c_{\vec{G}} e^{i\vec{G}\cdot\vec{r}}\)</span>$</p>
+<p><strong>允许的 <span class="arithmatex">\(\vec{G}\)</span> 集合</strong>就是<strong>倒格点</strong>——也是一个离散 3D 网格，基向量是 <span class="arithmatex">\(\vec{b}_1, \vec{b}_2, \vec{b}_3\)</span>。</p>
+<p>对应关系：
+- 1D 周期函数：基频 <span class="arithmatex">\(\omega_0 = 2\pi/T\)</span>，允许频率 = 整数倍
+- 3D 周期函数：基倒格矢 <span class="arithmatex">\(\vec{b}_i = 2\pi/\vec{a}_i\)</span>（大致如此；精确定义要用 <span class="arithmatex">\(\vec{a}_i\cdot\vec{b}_j = 2\pi\delta_{ij}\)</span>），允许"频率" = 整数线性组合</p>
+<p><strong>"倒"的含义</strong>：长度变频率（<span class="arithmatex">\(\vec{a}\)</span> 单位是 Å，<span class="arithmatex">\(\vec{b}\)</span> 单位是 1/Å）——实空间和倒空间是傅里叶对偶。</p>
+<h3 id="_7">具体例子：立方晶格<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>实空间：<span class="arithmatex">\(\vec{a}_1 = (a, 0, 0)\)</span>, <span class="arithmatex">\(\vec{a}_2 = (0, a, 0)\)</span>, <span class="arithmatex">\(\vec{a}_3 = (0, 0, a)\)</span>（边长 <span class="arithmatex">\(a\)</span> 的立方体）</p>
+<p>倒空间：<span class="arithmatex">\(\vec{b}_1 = (2\pi/a, 0, 0)\)</span>, <span class="arithmatex">\(\vec{b}_2 = (0, 2\pi/a, 0)\)</span>, <span class="arithmatex">\(\vec{b}_3 = (0, 0, 2\pi/a)\)</span>（边长 <span class="arithmatex">\(2\pi/a\)</span> 的立方体）</p>
+<p>倒格点就是 <span class="arithmatex">\((2\pi/a)(m_1, m_2, m_3)\)</span>，<span class="arithmatex">\(m_i \in \mathbb{Z}\)</span>——3D 的立方网格。</p>
+<p><strong>直观图像</strong>：
+- 实空间：原子在实际立方网格上
+- 倒空间：允许的傅里叶频率在<strong>倒空间立方网格</strong>上</p>
+<h3 id="_8">为什么有用<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>一个晶体周期函数（如电子密度 <span class="arithmatex">\(\rho(\vec{r})\)</span>）在倒空间只有<strong>有限个非零分量</strong>（存倒格点上的傅里叶系数即可）。相比实空间要在每个网格点存值，倒空间表示常常更紧凑。</p>
+<p>这就是 QE 用<strong>平面波基组 + FFT</strong>的物理基础——直接把波函数、密度存成倒格矢上的傅里叶系数。</p>
+<hr />
+<h2 id="q4bz">Q4：BZ 和倒格点间距的关系<a class="headerlink" href="#q4bz" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>你的推测：<em>"似乎与倒格点间距有关"</em></p>
+</blockquote>
+<p><strong>完全正确</strong>。</p>
+<h3 id="_9">精确关系<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>第一布里渊区是倒空间的 Wigner-Seitz 原胞：
+- 以 <span class="arithmatex">\(\vec{G} = 0\)</span> 为中心
+- 边界是到<strong>所有最近邻倒格点</strong>的中垂面
+- 形状取决于倒晶格类型（立方 → 立方 BZ；fcc → 截角八面体 BZ；etc.）</p>
+<h3 id="_10">大小/尺寸<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>BZ 的线性尺寸 ~ <strong>最近邻倒格点到原点的距离的一半</strong>（因为 BZ 边界在中点）。</p>
+<p>对立方晶格：
+- 原胞大小 <span class="arithmatex">\(a\)</span>
+- 倒格点间距 <span class="arithmatex">\(2\pi/a\)</span>
+- BZ 是边长 <span class="arithmatex">\(2\pi/a\)</span> 的立方体（中心在原点）</p>
+<h3 id="_11">有趣推论<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>原胞越大 → 倒格点越密 → BZ 越小</strong></li>
+<li>超胞（<span class="arithmatex">\(2\times 2\times 2\)</span> 原胞）：实空间大 2 倍 → 倒空间小 2 倍 → BZ 缩 8 倍</li>
+<li>
+<p>结果：超胞的<strong>能带被"折叠"</strong>到更小的 BZ 里（band folding）</p>
+</li>
+<li>
+<p><strong>原胞越小 → 倒格点越稀疏 → BZ 越大</strong></p>
+</li>
+<li>极限：单个原子的 BZ 是整个倒空间</li>
+</ul>
+<h3 id="_12">钟表类比（再用一次）<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>钟表周期 12 小时 → "频率"（相位速率）的基本单位是 <span class="arithmatex">\(2\pi/12\)</span></li>
+<li>所有不等价的钟表相位都在 <span class="arithmatex">\([0, 2\pi)\)</span>——这就是一维"BZ"</li>
+<li>换成 6 小时的"超钟"：基本频率 <span class="arithmatex">\(2\pi/6\)</span>，一维 BZ 变成 <span class="arithmatex">\([0, 2\pi/6)\)</span>——缩一半</li>
+</ul>
+<p>3D 晶体的 BZ 就是这个思路的 3D 推广。</p>
+<hr />
+<h2 id="q5bloch">Q5：为什么突然有这么多新词？（周期势、本征态、Bloch 波、晶体动量）<a class="headerlink" href="#q5bloch" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>原文：<em>"不就是周期性重复的结构吗，为什么有这么多奇怪的内容"</em></p>
+</blockquote>
+<p>这是本题开头"背景"那段的延伸。简单回答：</p>
+<table>
+<thead>
+<tr>
+<th>词</th>
+<th>为什么需要</th>
+<th>大白话</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>周期势</strong></td>
+<td>原子核排在周期晶格上，它们产生的势场也是周期的</td>
+<td>每个原胞里的电子看到的势场完全一样</td>
+</tr>
+<tr>
+<td><strong>本征态</strong></td>
+<td>量子力学里，能量确定的电子态是 <span class="arithmatex">\(\hat{H}\psi = E\psi\)</span> 的解（不是化简 7 新概念，在 <code>10-qm-basics</code> 讲过）</td>
+<td>能量稳定的电子状态</td>
+</tr>
+<tr>
+<td><strong>Bloch 波</strong></td>
+<td>满足晶体平移对称的特殊本征态形式</td>
+<td>电子的"周期化波"——平面波 × 原胞内细节</td>
+</tr>
+<tr>
+<td><strong>晶体动量 <span class="arithmatex">\(\vec{k}\)</span></strong></td>
+<td>Bloch 波的标签（身份证号）</td>
+<td>每走一个原胞波函数转的相位</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_13">"不就是周期结构吗，何必这么复杂？"<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>你说得对，<strong>如果只是描述经典周期结构，不需要这些</strong>。但我们要描述的是<strong>周期结构里的量子力学问题</strong>——这才是复杂的来源：</p>
+<ol>
+<li><strong>电子是量子粒子</strong>：需要用波函数描述</li>
+<li><strong>波函数必须满足量子力学规则</strong>（本征态、归一化等）</li>
+<li><strong>加上晶体周期约束</strong>：波函数必须"周期等变"</li>
+<li><strong>结果</strong>：波函数被限制成"Bloch 形式"——既满足量子力学又满足晶体对称</li>
+</ol>
+<p>Bloch 定理就是"量子力学 × 晶体对称"联合的结论。如果只有经典波，或者非周期量子系统，就不需要这套工具。</p>
+<h3 id="_14">对照之前章节<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>化简</th>
+<th>涉及系统</th>
+<th>新引入的概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 BO</td>
+<td>原子 / 分子 / 晶体都适用</td>
+<td>外势 <span class="arithmatex">\(V_{ext}\)</span></td>
+</tr>
+<tr>
+<td>2 Slater</td>
+<td>任意多电子系统</td>
+<td>单电子轨道、Slater 行列式</td>
+</tr>
+<tr>
+<td>3 HK</td>
+<td>任意基态问题</td>
+<td>电子密度、能量泛函</td>
+</tr>
+<tr>
+<td>4 KS</td>
+<td>任意基态问题</td>
+<td>KS 轨道、<span class="arithmatex">\(V_{eff}\)</span></td>
+</tr>
+<tr>
+<td>5 XC</td>
+<td>任意系统</td>
+<td>LDA/PBE/SCAN 泛函</td>
+</tr>
+<tr>
+<td>6 赝势</td>
+<td>任意系统</td>
+<td>价电子、norm-conserving/PAW</td>
+</tr>
+<tr>
+<td><strong>7 Bloch</strong></td>
+<td><strong>专门为晶体</strong>（周期系统）</td>
+<td>Bloch 波、<span class="arithmatex">\(\vec{k}\)</span>、BZ、倒格矢</td>
+</tr>
+</tbody>
+</table>
+<p>化简 7 的"新"正是因为它<strong>第一次专门针对晶体</strong>。不是化简 1–6 不够完整，而是前 6 步在讨论更一般的问题，到了化简 7 才开始利用晶体的特殊结构。</p>
+<hr />
+<h2 id="q6k-k-k">Q6：k 点是"有 k 个点"还是"有一个点叫 k"？<a class="headerlink" href="#q6k-k-k" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>原文："一个值得反复玩味的类比：解 Bloch 问题 = ..."</p>
+</blockquote>
+<p><strong>"k 点"= "在倒空间里坐标为 <span class="arithmatex">\(\vec{k}\)</span> 的点"</strong>。不是"有 <span class="arithmatex">\(k\)</span> 个点"，也不是"有一个点叫 <span class="arithmatex">\(k\)</span>"——<span class="arithmatex">\(\vec{k}\)</span> 是该点的 3 维坐标。</p>
+<h3 id="_15">澄清命名<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>"k 空间"</strong> = 倒空间（倒格矢空间）的另一种叫法，因为这里的坐标就用 <span class="arithmatex">\(\vec{k}\)</span> 表示</li>
+<li><strong>"k 点"</strong> = k 空间里的一个具体点，坐标 <span class="arithmatex">\((k_x, k_y, k_z)\)</span> 或者分数坐标 <span class="arithmatex">\((f_1, f_2, f_3)\)</span> 乘以 <span class="arithmatex">\(\vec{b}_i\)</span></li>
+<li><strong>"k 点采样"</strong> = 在 BZ 里选有限个 k 点，用于数值积分</li>
+</ul>
+<h3 id="_16">具体例子<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>输入 <code>K_POINTS automatic 8 8 8 0 0 0</code>：</p>
+<ul>
+<li>"8 8 8"：在 BZ 三个方向各等距取 8 个点</li>
+<li>总共 <span class="arithmatex">\(8^3 = 512\)</span> 个 k 点</li>
+<li>"0 0 0"：从 Γ 点（原点）开始（gamma-centered）</li>
+<li>QE 会用对称性压缩成 ~30 个<strong>不可约 k 点</strong>（irreducible BZ）</li>
+</ul>
+<p>每个 k 点都有 3 个坐标，对应 BZ 里的一个具体位置（比如 Γ = (0, 0, 0)，X = (0.5, 0, 0.5) 等）。</p>
+<h3 id="qe">QE 输出中典型的一行<a class="headerlink" href="#qe" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        k =  0.0000  0.0000  0.0000 (  2527 PWs)   bands (ev):
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           -5.8123  6.0123  6.0123 ...
+</span></code></pre></div>
+<ul>
+<li><code>k = 0.0000 0.0000 0.0000</code>：这个 k 点的坐标（Γ 点）</li>
+<li><code>bands</code>：该 k 点下各条能带的本征值</li>
+</ul>
+<h3 id="k">"k 点" 命名的历史<a class="headerlink" href="#k" title="Permanent link">&para;</a></h3>
+<p>英文 "k-point" 确实有歧义，但物理学界习惯这样说。更准确的翻译应该是 "k 空间中的点" 或 "<span class="arithmatex">\(\vec{k}\)</span> 向量"。中文里有时说成 "k 矢点" 或 "k 矢"。</p>
+<p>下次读到 "k 点" 就理解为 <strong>"一个 3 维坐标 <span class="arithmatex">\(\vec{k}\)</span>"</strong> 即可。</p>
+<hr />
+<h2 id="_17">用音乐类比一次性串起来（总复习）<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h2>
+<p>把整章的核心概念放到一个类比里：</p>
+<h3 id="_18">场景：无限长的周期音乐<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<p>你有一段永远重复的 4 拍音乐。问：<strong>什么样的音波在这段音乐里是"能量稳定的"？</strong></p>
+<table>
+<thead>
+<tr>
+<th>音乐</th>
+<th>晶体</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4 拍的小节</td>
+<td>原胞（含原子位置）</td>
+</tr>
+<tr>
+<td>小节长度 <span class="arithmatex">\(T\)</span>（秒）</td>
+<td>晶格常数 <span class="arithmatex">\(\vec{a}\)</span>（Å）</td>
+</tr>
+<tr>
+<td>允许的"和谐音波"形式（Bloch 波）</td>
+<td>Bloch 波函数 <span class="arithmatex">\(\psi = e^{i\vec{k}\cdot\vec{r}} u(\vec{r})\)</span></td>
+</tr>
+<tr>
+<td>小节内的具体波形 <span class="arithmatex">\(u(t)\)</span></td>
+<td>原胞内周期部分 <span class="arithmatex">\(u(\vec{r})\)</span></td>
+</tr>
+<tr>
+<td>"挪一小节波形差一相位" <span class="arithmatex">\(e^{i\omega T}\)</span></td>
+<td>"挪一原胞差一相位" <span class="arithmatex">\(e^{i\vec{k}\cdot\vec{R}}\)</span></td>
+</tr>
+<tr>
+<td>相位速率 <span class="arithmatex">\(\omega\)</span></td>
+<td>晶体动量 <span class="arithmatex">\(\vec{k}\)</span></td>
+</tr>
+<tr>
+<td>允许的基频 <span class="arithmatex">\(\omega_0 = 2\pi/T\)</span></td>
+<td>倒格矢基 <span class="arithmatex">\(\vec{b}_i = 2\pi/\vec{a}_i\)</span></td>
+</tr>
+<tr>
+<td>"频率 0 到 <span class="arithmatex">\(\omega_0\)</span>" 是独立区间</td>
+<td>第一布里渊区</td>
+</tr>
+<tr>
+<td>超出这个区间 = 别名（aliasing）</td>
+<td><span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 等价于 <span class="arithmatex">\(\vec{k}\)</span></td>
+</tr>
+<tr>
+<td>每个频率 <span class="arithmatex">\(\omega\)</span> 下的"谐波序列"</td>
+<td>每个 <span class="arithmatex">\(\vec{k}\)</span> 下的能带 <span class="arithmatex">\(\varepsilon_n(\vec{k})\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Bloch 定理在这个类比里就是说：<strong>任何稳定的音波都可以写成"某个基本相位速率 <span class="arithmatex">\(\omega\)</span> × 小节内的某个波形"——这两件事联合起来就完整描述了音波</strong>。</p>
+<p>晶体的 Bloch 波也是："某个晶体动量 <span class="arithmatex">\(\vec{k}\)</span> × 原胞内的周期波形 <span class="arithmatex">\(u(\vec{r})\)</span>"。</p>
+<hr />
+<h2 id="6">本轮 6 个问题速览<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>主题</th>
+<th>核心</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>原文"直觉"像天书</td>
+<td>"<span class="arithmatex">\(\hat{H}\)</span> 与 <span class="arithmatex">\(\hat{T}\)</span> 对易" = 晶体处处一样，能量算符不关心挪不挪；"本征值是 <span class="arithmatex">\(e^{i\vec{k}\cdot\vec{R}}\)</span>" = 挪一下只能差一个纯相位</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 从哪来？BZ 是什么？</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 是"挪一原胞差的相位速率"；<span class="arithmatex">\(\vec{k}\)</span> 和 <span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 等价（钟表 13=1）；BZ 是代表区</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>倒格矢为什么</td>
+<td>周期函数的傅里叶级数只在"允许频率"上取值；3D 版本就是倒格点，它们构成倒格矢网格</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>BZ 与倒格点间距</td>
+<td>完全正确：BZ 是 Wigner-Seitz 原胞，大小 ~ 最近邻倒格点距离的一半</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>新词从哪来</td>
+<td>化简 7 第一次专门处理<strong>晶体</strong>（周期系统），之前的化简都是更一般的问题；这些新词是"量子力学 × 晶体周期性"的联合结果</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>"k 点"是什么</td>
+<td>倒空间里坐标为 <span class="arithmatex">\(\vec{k}\)</span> 的点；<span class="arithmatex">\(\vec{k}\)</span> 是 3 维坐标；"k 点采样" = 在 BZ 里选有限多个 <span class="arithmatex">\(\vec{k}\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="q7">Q7：在布里渊区视角下，我们具体要算什么？和前面几步的关系是什么？<a class="headerlink" href="#q7" title="Permanent link">&para;</a></h2>
+<p>这个问题是本篇和其他章节对接的钥匙。</p>
+<h3 id="bloch-dft-k">全局图景：Bloch 把 DFT 每一步"按 k 分块"<a class="headerlink" href="#bloch-dft-k" title="Permanent link">&para;</a></h3>
+<p>化简 1–6 定义了一个"大问题"：
+- 化简 1：核位置固定 → 周期外势 <span class="arithmatex">\(V_{ext}\)</span>
+- 化简 3–4：KS 方程 + 密度泛函 <span class="arithmatex">\(E[\rho]\)</span>
+- 化简 5：<span class="arithmatex">\(E_{xc}\)</span> 具体形式
+- 化简 6：只算价电子</p>
+<p><strong>但化简 1–6 没告诉你"晶体里怎么实际求解"</strong>——KS 方程在整个 1 cm³ 晶体上是 <span class="arithmatex">\(10^{23}\)</span> 维的。</p>
+<p><strong>化简 7 做的事</strong>：利用 Bloch 定理把这个大问题<strong>按 <span class="arithmatex">\(\vec{k}\)</span> 分块</strong>。</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>原来：一个 10^23 维 KS 问题
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   化简 7 Bloch 分块
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      ↓
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>现在：在每个 k 点上，一个原胞大小的 KS 子问题
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>     不同 k 之间互不耦合
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>     对所有 k &quot;积分&quot;得到全局量
+</span></code></pre></div>
+<h3 id="_19">两个层次的计算<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h4 id="1-k">层次 1：每个 k 点独立算（"原子级操作"）<a class="headerlink" href="#1-k" title="Permanent link">&para;</a></h4>
+<p>对 BZ 里每个 <span class="arithmatex">\(\vec{k}\)</span>，解一个局部 KS 方程：</p>
+<div class="arithmatex">\[\hat{H}_{KS}(\vec{k}) \, \phi_{n,\vec{k}}(\vec{r}) = \varepsilon_n(\vec{k}) \, \phi_{n,\vec{k}}(\vec{r})\]</div>
+<p>其中 <span class="arithmatex">\(\phi_{n,\vec{k}}(\vec{r}) = e^{i\vec{k}\cdot\vec{r}} u_{n,\vec{k}}(\vec{r})\)</span>，<span class="arithmatex">\(u\)</span> 只在原胞内变化。</p>
+<p>子问题输出：
+- <strong>本征能 <span class="arithmatex">\(\varepsilon_n(\vec{k})\)</span></strong>：该 <span class="arithmatex">\(\vec{k}\)</span> 下的能带值（<span class="arithmatex">\(n = 1, 2, \ldots, N_{bnd}\)</span>）
+- <strong>KS 轨道 <span class="arithmatex">\(\phi_{n,\vec{k}}(\vec{r})\)</span></strong>
+- <strong>占据数 <span class="arithmatex">\(f_{n,\vec{k}}\)</span></strong>：按能量填电子</p>
+<p>规模：每个 <span class="arithmatex">\(\vec{k}\)</span> 的问题只涉及<strong>一个原胞</strong>，矩阵规模 <span class="arithmatex">\(\sim 10^3\)</span>–<span class="arithmatex">\(10^4\)</span>，可对角化。</p>
+<h3 id="_20">重要澄清（针对追问）<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p>你的这句追问包含 4 个互相关联的概念混淆，必须一并拆开——这是学 Bloch 最容易栽的地方。</p>
+<h4 id="1k">混淆 1：k 点 ≠ 原胞<a class="headerlink" href="#1k" title="Permanent link">&para;</a></h4>
+<p><strong>两者在完全不同的空间</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>所在空间</th>
+<th>单位</th>
+<th>是什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>原胞</strong></td>
+<td>实空间（你能"摸到"的 3D 空间）</td>
+<td>Å 或 bohr</td>
+<td>一块有限体积，装着几个原子</td>
+</tr>
+<tr>
+<td><strong>k 点</strong></td>
+<td>倒空间（波矢空间 / 频率空间）</td>
+<td>1/Å 或 1/bohr</td>
+<td>一个 3D 坐标 <span class="arithmatex">\(\vec{k}\)</span>，标记电子波的"相位变化率"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>类比</strong>：
+- 原胞 = 一段录好的音频波形（实空间信号）
+- k 点 = 该音频做傅里叶分析后的<strong>一个频率分量</strong>（频域坐标）</p>
+<p>"每个 k 点的 KS 问题涉及一个原胞"的意思：我们<strong>在这个 k 标签下</strong>，解一个原胞大小的方程。不是说 k 点<strong>就是</strong>原胞——它们是两个不同的东西，只是<strong>每次 KS 计算都发生在原胞空间里</strong>（因为 <span class="arithmatex">\(u_{n,\vec{k}}(\vec{r})\)</span> 只在原胞内变化）。</p>
+<h4 id="2-k">混淆 2：实空间原胞都一样 ≠ 倒空间 k 都一样<a class="headerlink" href="#2-k" title="Permanent link">&para;</a></h4>
+<p>这是最关键的点：</p>
+<p><strong>实空间</strong>（原胞）：
+- 晶体 = 原胞无限复制
+- <strong>每个原胞里的电子密度、势场都完全一样</strong>
+- 所以"算一个原胞就够了"——对的，我们的计算也确实只在一个原胞里</p>
+<p><strong>倒空间</strong>（BZ 内的 k 点）：
+- BZ 内的<strong>每个 <span class="arithmatex">\(\vec{k}\)</span> 对应一个完全不同的物理态</strong>
+- 不同 <span class="arithmatex">\(\vec{k}\)</span> 的能量 <span class="arithmatex">\(\varepsilon_n(\vec{k})\)</span> 不同
+- 不同 <span class="arithmatex">\(\vec{k}\)</span> 的波函数 <span class="arithmatex">\(\phi_{n,\vec{k}}\)</span> 空间相位模式不同
+- 所以<strong>必须算所有 k，不能只算一个</strong></p>
+<p><strong>为什么容易混淆</strong>：两者都有"周期性"，但周期的含义不同：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>实空间</th>
+<th>倒空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>周期对象</td>
+<td>原胞（每格内容相同）</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 的等价（<span class="arithmatex">\(\vec{k}\)</span> 与 <span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 物理等同）</td>
+</tr>
+<tr>
+<td>"周期单元"</td>
+<td>一个原胞</td>
+<td>一个 BZ</td>
+</tr>
+<tr>
+<td>周期单元内部</td>
+<td>内容都一样（只有一个原子集合）</td>
+<td><strong>每个点都是独立物理态</strong>（无穷多 <span class="arithmatex">\(\vec{k}\)</span>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>BZ 是什么</strong>：它是"<strong>独立 <span class="arithmatex">\(\vec{k}\)</span> 的代表区</strong>"——BZ 以外的 <span class="arithmatex">\(\vec{k}\)</span> 都和 BZ 内某个 <span class="arithmatex">\(\vec{k}\)</span> 等价，所以不需要算。但 BZ 内部的不同 <span class="arithmatex">\(\vec{k}\)</span> 互相不等价，都要算。</p>
+<h3 id="_21">自由电子类比（最能说明问题）<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>考虑最简单的自由电子：</p>
+<div class="arithmatex">\[\psi_{\vec{k}}(\vec{r}) = e^{i\vec{k}\cdot\vec{r}}, \quad \varepsilon(\vec{k}) = \frac{\hbar^2 k^2}{2m}\]</div>
+<ul>
+<li>每个 <span class="arithmatex">\(\vec{k}\)</span> 对应一个不同动量、不同能量的电子态</li>
+<li><span class="arithmatex">\(\vec{k}=0\)</span> 静止，<span class="arithmatex">\(\vec{k}=(1, 0, 0)/\text{Å}\)</span> 朝 x 方向运动，<span class="arithmatex">\(\vec{k}=(0, 1, 0)/\text{Å}\)</span> 朝 y 方向……</li>
+<li><strong>每个都是不同的物理态，能量都不同</strong></li>
+</ul>
+<p>电子密度：
+$<span class="arithmatex">\(\rho(\vec{r}) = \sum_{\text{occupied }\vec{k}} |\psi_{\vec{k}}(\vec{r})|^2\)</span>$</p>
+<p>如果只算一个 <span class="arithmatex">\(\vec{k}\)</span>，你漏掉其他所有态。实际金属里 Fermi 海下有<strong>巨大数量</strong>的占据 <span class="arithmatex">\(\vec{k}\)</span>，全部都要算（至少采样足够多代表点）。</p>
+<p>晶体里的 Bloch 电子完全类似——只是波函数从 <span class="arithmatex">\(e^{i\vec{k}\cdot\vec{r}}\)</span> 变成 <span class="arithmatex">\(e^{i\vec{k}\cdot\vec{r}} u_{n,\vec{k}}(\vec{r})\)</span>（多了原胞内细节），但"不同 <span class="arithmatex">\(\vec{k}\)</span> 是不同态"这件事不变。</p>
+<h3 id="_22">钟表类比的精确界限<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<p>之前的钟表类比说"13 点 = 1 点"——这对应"<strong><span class="arithmatex">\(\vec{k}\)</span> 和 <span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 等价</strong>"。</p>
+<p>但这<strong>不意味着</strong>"钟表上所有时间都相等"——2 点不是 8 点，虽然都在 0-12 范围内。</p>
+<p><strong>对应关系</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>钟表</th>
+<th>晶体</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-12 小时（一个周期）</td>
+<td>一个 BZ</td>
+</tr>
+<tr>
+<td>13 点 = 1 点（周期等价）</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 与 <span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 等价</td>
+</tr>
+<tr>
+<td><strong>2 点 ≠ 8 点（周期内不同位置）</strong></td>
+<td><strong>BZ 内不同 <span class="arithmatex">\(\vec{k}\)</span> 是不同物理态</strong></td>
+</tr>
+<tr>
+<td>只需要标时钟 0-12</td>
+<td>只需要标 BZ 内 k</td>
+</tr>
+<tr>
+<td>但 0-12 里每个时刻都不同</td>
+<td><strong>BZ 里每个 <span class="arithmatex">\(\vec{k}\)</span> 都要算</strong></td>
+</tr>
+</tbody>
+</table>
+<h4 id="3int_bz-fveck-dveck">混淆 3：<span class="arithmatex">\(\int_{BZ} f(\vec{k}) d\vec{k}\)</span> 是什么<a class="headerlink" href="#3int_bz-fveck-dveck" title="Permanent link">&para;</a></h4>
+<p><strong>不是</strong>"对 BZ 积分 <span class="arithmatex">\(d\text{BZ}\)</span>"（把 BZ 当积分变量）。</p>
+<p><strong>是</strong>：
+- <strong>积分区域</strong>：BZ（一个 3D 区域）
+- <strong>积分变量</strong>：<span class="arithmatex">\(\vec{k}\)</span>（BZ 里的任意点）
+- <strong>积分元</strong>：<span class="arithmatex">\(d\vec{k} = dk_x \, dk_y \, dk_z\)</span>（3D 小体积元）</p>
+<p>完全类比你熟悉的 1D 积分：</p>
+<div class="arithmatex">\[\int_0^{2\pi} \sin(x) \, dx\]</div>
+<ul>
+<li>积分区域 <span class="arithmatex">\([0, 2\pi]\)</span></li>
+<li>积分变量 <span class="arithmatex">\(x\)</span></li>
+<li>积分元 <span class="arithmatex">\(dx\)</span></li>
+</ul>
+<p>没人会把这写成"对 <span class="arithmatex">\([0, 2\pi]\)</span> 积分 <span class="arithmatex">\(d[0, 2\pi]\)</span>"——同理，BZ 是积分<strong>区域</strong>，不是积分变量。</p>
+<p>BZ 积分是：<strong>在 BZ 内部扫描所有 <span class="arithmatex">\(\vec{k}\)</span>，把每个 <span class="arithmatex">\(\vec{k}\)</span> 的贡献加起来</strong>。</p>
+<h4 id="4-bz-vs-k">混淆 4：为什么要积分（"每个 BZ 都一样" vs "每个 k 不同"）<a class="headerlink" href="#4-bz-vs-k" title="Permanent link">&para;</a></h4>
+<p>"每个 BZ 都一样"是对的——但<strong>一个 BZ 内部不是一样的</strong>！</p>
+<p>想算整个晶体的电子密度，<strong>不需要</strong>考虑 BZ 外的 <span class="arithmatex">\(\vec{k}\)</span>（那里和 BZ 内等价，多余）。但 BZ 内<strong>每个</strong> <span class="arithmatex">\(\vec{k}\)</span> 都有独立贡献：</p>
+<div class="arithmatex">\[\rho(\vec{r}) = \sum_n \underbrace{\int_{BZ} f_{n,\vec{k}} |\phi_{n,\vec{k}}(\vec{r})|^2 \frac{d\vec{k}}{(2\pi)^3}}_{\text{BZ 内扫所有 }\vec{k}\text{，加起来}}\]</div>
+<p><strong>每个 <span class="arithmatex">\(\vec{k}\)</span> 贡献什么</strong>：
+- 该 <span class="arithmatex">\(\vec{k}\)</span> 下填充了的每个能带 <span class="arithmatex">\(n\)</span> 的电子密度 <span class="arithmatex">\(f_{n,\vec{k}}|\phi_{n,\vec{k}}|^2\)</span>
+- 不同 <span class="arithmatex">\(\vec{k}\)</span> 的 <span class="arithmatex">\(\phi\)</span> 和 <span class="arithmatex">\(\varepsilon\)</span> 都不同——贡献都不同</p>
+<p><strong>如果只算 1 个 k</strong>（比如 Γ 点）：
+- 漏掉 BZ 其他位置的贡献
+- 对晶体尺寸 <span class="arithmatex">\(N_1 \times N_2 \times N_3\)</span> 的超胞，<strong>漏掉 <span class="arithmatex">\(N_1 N_2 N_3 - 1\)</span> 个独立态</strong>
+- 结果能量错得离谱，结构弛豫发散</p>
+<p><strong>实际做法</strong>（化简 9 的内容）：
+- 离散化 BZ 为 Monkhorst-Pack 网格（如 <span class="arithmatex">\(8 \times 8 \times 8 = 512\)</span> k 点）
+- 每个 k 点加权求和（而不是连续积分）
+- 不同体系 k 点数需求不同：金属 <span class="arithmatex">\(12^3+\)</span>，绝缘体 <span class="arithmatex">\(6^3\)</span> 够</p>
+<h3 id="_23">总结：核心纠正<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<p>你的追问分解后的<strong>4 个纠正</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>你的表述</th>
+<th>正确表述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"k 点 = 原胞"</td>
+<td>❌ k 点是倒空间坐标，原胞是实空间区域</td>
+</tr>
+<tr>
+<td>"只有相位变化，能量不变"</td>
+<td>❌ 不同 <span class="arithmatex">\(\vec{k}\)</span> 的能量 <span class="arithmatex">\(\varepsilon_n(\vec{k})\)</span> <strong>不同</strong></td>
+</tr>
+<tr>
+<td>"只算一个 k 就好了"</td>
+<td>❌ 必须算所有独立 <span class="arithmatex">\(\vec{k}\)</span>（BZ 内都不等价）</td>
+</tr>
+<tr>
+<td>"对 BZ 积分 <span class="arithmatex">\(d\text{BZ}\)</span>"</td>
+<td>❌ 是对 BZ <strong>内部</strong>的 <span class="arithmatex">\(\vec{k}\)</span> 积分，<span class="arithmatex">\(d\vec{k}\)</span> 是积分元</td>
+</tr>
+<tr>
+<td>"每个 BZ 都一样，为什么积分"</td>
+<td>✅ BZ 之间确实等价（所以只需一个 BZ），❌ 但 BZ <strong>内部</strong>不同 <span class="arithmatex">\(\vec{k}\)</span> 完全不同</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ml_1">ML 类比（一次说清）<a class="headerlink" href="#ml_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ML 情境</th>
+<th>DFT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图像分类：每张图像有 224 × 224 像素</td>
+<td>每个晶体有很多 <span class="arithmatex">\(\vec{k}\)</span> 点</td>
+</tr>
+<tr>
+<td>"每个像素值都要看"才能分类</td>
+<td>"每个 <span class="arithmatex">\(\vec{k}\)</span> 都要算"才能得到总电子密度</td>
+</tr>
+<tr>
+<td>不能"只看一个像素就说这是猫"</td>
+<td>不能"只算 Γ 点就说这是 Si"</td>
+</tr>
+<tr>
+<td>如果图像周期（如 tiled texture），可以只看一个 tile</td>
+<td>如果晶体周期（确实），可以只看一个原胞</td>
+</tr>
+<tr>
+<td><strong>但 tile 内部的每个像素还是要看</strong></td>
+<td><strong>但原胞内部对应 BZ 内所有 <span class="arithmatex">\(\vec{k}\)</span> 还是要算</strong></td>
+</tr>
+</tbody>
+</table>
+<p>关键：<strong>实空间周期性</strong>让我们只需要<strong>一个原胞的空间</strong>，但这个原胞里的电子是由<strong>所有 BZ 内 <span class="arithmatex">\(\vec{k}\)</span> 的 Bloch 模式叠加而成</strong>——必须对所有 <span class="arithmatex">\(\vec{k}\)</span> 积分才能得到对的答案。</p>
+<h3 id="_24">一张图总结<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>实空间：
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>┌───────┬───────┬───────┬───────┐
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│ 原胞 A │ 原胞 A │ 原胞 A │ 原胞 A │ ← 所有原胞内容一样（周期）
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│ (0,0,0)│(a,0,0)│(2a,0,0)│(3a,0,0)│ ← 所以只需看 1 个原胞
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└───────┴───────┴───────┴───────┘
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>一个原胞内的电子密度 ρ(r) 由什么决定？
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  ↓ 积分所有 Bloch 模式
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  ↓
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>倒空间 BZ 内部：
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>      ┌──────────────────┐
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>      │  ·  ·  ·  ·  ·   │
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>      │  ·  k₁ k₂ k₃  ·  │ ← BZ 里每个 k 点都是独立物理态
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>      │  ·  k₄ k₅ k₆  ·  │   每个都要算 φ_{n,k}(r), ε_n(k)
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>      │  ·  ·  ·  ·  ·   │
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>      └──────────────────┘
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>ρ(r) = Σ_n ∫_BZ f_{n,k} |φ_{n,k}(r)|² dk/(2π)³
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>       ↑                              ↑
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>       对所有 k 积分                    每个 k 贡献不同
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>最后得到的 ρ(r) 在任何原胞内都一样（实空间周期性）
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>但这个 ρ(r) 的具体数值 = 所有 BZ 内 k 模式贡献的叠加
+</span></code></pre></div>
+<p><strong>核心洞察</strong>：<strong>实空间周期 ↔ 倒空间的 BZ 离散网格</strong>。实空间"看一个原胞"对应倒空间"扫所有 BZ 内 <span class="arithmatex">\(\vec{k}\)</span>"——两个空间的对偶性。</p>
+<p><strong>追问（概念确认）：倒空间 = 频率空间？BZ = 频率范围？对每个频率的物性积分？</strong></p>
+<p><strong>你的三个直觉基本都对</strong>，稍作细化和扩展：</p>
+<h3 id="_25">✅ 倒空间 ≈ 频率空间（更精确：<strong>空间</strong>频率空间）<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
+<ul>
+<li>信号处理：时间 <span class="arithmatex">\(t\)</span> 的傅里叶对偶 → 时间频率 <span class="arithmatex">\(\omega\)</span>（单位 Hz = 1/s）</li>
+<li>晶体物理：位置 <span class="arithmatex">\(\vec{r}\)</span> 的傅里叶对偶 → <strong>空间频率</strong> <span class="arithmatex">\(\vec{k}\)</span>（单位 1/m 或 1/Å）</li>
+<li><strong>数学上完全是同一个概念</strong>——傅里叶对偶空间</li>
+<li>物理上的差别只是变量：时间 vs 空间</li>
+</ul>
+<p>类比表：</p>
+<table>
+<thead>
+<tr>
+<th>信号处理</th>
+<th>晶体</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>时间 <span class="arithmatex">\(t\)</span></td>
+<td>位置 <span class="arithmatex">\(\vec{r}\)</span></td>
+</tr>
+<tr>
+<td>时间频率 <span class="arithmatex">\(\omega\)</span>（Hz）</td>
+<td>空间频率 <span class="arithmatex">\(\vec{k}\)</span>（1/Å）</td>
+</tr>
+<tr>
+<td>傅里叶变换</td>
+<td>倒空间表示</td>
+</tr>
+<tr>
+<td>周期信号</td>
+<td>周期晶格</td>
+</tr>
+<tr>
+<td>离散频率（倍频）</td>
+<td>倒格矢 <span class="arithmatex">\(\vec{G}\)</span>（离散倒格点）</td>
+</tr>
+<tr>
+<td>采样信号的奈奎斯特区</td>
+<td>第一布里渊区</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bz">✅ BZ ≈ 独立频率的范围（奈奎斯特区类比）<a class="headerlink" href="#bz" title="Permanent link">&para;</a></h3>
+<p><strong>完全准确</strong>。BZ 不是"所有频率"（倒空间是无限的），而是"<strong>独立空间频率的代表区</strong>"：</p>
+<ul>
+<li>超出 BZ 的 <span class="arithmatex">\(\vec{k}\)</span> 都能通过加倒格矢 <span class="arithmatex">\(\vec{G}\)</span> "折叠"回 BZ 内（类似数字信号里的 aliasing）</li>
+<li>所以只需扫描 BZ 内——和<strong>采样定理里"频率只需取到奈奎斯特频率"</strong>是同一数学事实</li>
+</ul>
+<p>这个关系用公式说明：
+- 信号采样率 <span class="arithmatex">\(f_s\)</span> → 奈奎斯特区 <span class="arithmatex">\([-f_s/2, +f_s/2]\)</span>
+- 晶体晶格周期 <span class="arithmatex">\(a\)</span> → 倒格矢基 <span class="arithmatex">\(b = 2\pi/a\)</span> → BZ 大小 <span class="arithmatex">\([-b/2, +b/2]\)</span></p>
+<h3 id="_26">✅ 对每个频率的物性积分<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
+<p><strong>正确</strong>。每个 <span class="arithmatex">\(\vec{k}\)</span> 对应一个独立的物理态，所有态的贡献叠加给全局量：</p>
+<div class="arithmatex">\[\rho(\vec{r}) = \sum_n \int_{BZ} f_{n,\vec{k}} |\phi_{n,\vec{k}}(\vec{r})|^2 \frac{d\vec{k}}{(2\pi)^3}\]</div>
+<p>类比：信号处理里，把所有频率分量叠加还原时域信号：
+$<span class="arithmatex">\(f(t) = \frac{1}{2\pi}\int F(\omega) e^{i\omega t} \, d\omega\)</span>$</p>
+<p>结构完全相同——<strong>对频率域积分，得到位置域的物理量</strong>。</p>
+<h3 id="_27">一个重要补充：倒空间里有<strong>两种"频率"</strong><a class="headerlink" href="#_27" title="Permanent link">&para;</a></h3>
+<p>晶体的倒空间实际包含<strong>两层傅里叶结构</strong>。</p>
+<p><strong>用通俗类比区分两种频率</strong>：</p>
+<h4 id="1">类比 1：海浪打在一排浮标上<a class="headerlink" href="#1" title="Permanent link">&para;</a></h4>
+<p>想象海上有一排均匀排列的浮标（每间隔 10 m 一个 = 晶体里的原子）。浪（电子波）拍过来：</p>
+<ul>
+<li><strong>长波 <span class="arithmatex">\(\vec{k}\)</span></strong>（BZ 内的频率）：海面的大浪——波峰波谷每 50–100 m 变化一次</li>
+<li>描述"跨浮标"的波动节奏——相邻浮标之间浪的相位差</li>
+<li>波长 ~ 浮标间距的 1 倍到无穷倍</li>
+<li><strong>短波 <span class="arithmatex">\(\vec{G}\)</span></strong>（倒格点的频率）：每个浮标周围的小涟漪</li>
+<li>描述一个浮标周围 "水花细节"——短距离内的快速起伏</li>
+<li>波长 ~ 浮标间距的 1/10 甚至更短</li>
+</ul>
+<p><strong>两种波同时存在</strong>，要完整描述水面必须都知道。</p>
+<h4 id="2">类比 2：一列火车<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<p>想象一列长火车（晶体），由很多<strong>相同的车厢</strong>（原胞）组成。每节车厢里有乘客（电子密度）。</p>
+<ul>
+<li><strong><span class="arithmatex">\(\vec{k}\)</span>（跨车厢节奏）</strong>：整列车上乘客<strong>集体做动作的时序</strong></li>
+<li>所有车厢乘客同时举手 → <span class="arithmatex">\(\vec{k} = 0\)</span>（最同步）</li>
+<li>隔一节错开一个节拍 → <span class="arithmatex">\(\vec{k}\)</span> 适中</li>
+<li>
+<p>相邻车厢动作反向 → <span class="arithmatex">\(\vec{k}\)</span> 达到 BZ 边界</p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(\vec{G}\)</span>（车厢内分布）</strong>：一节车厢里乘客<strong>具体坐哪里</strong></p>
+</li>
+<li>坐过道 / 坐窗边 / 坐门口 —— 这些分布细节</li>
+<li>分布越复杂 → 需要越多 <span class="arithmatex">\(\vec{G}\)</span> 分量来描述</li>
+<li><code>ecutwfc</code> 就是"保留多精细的分布细节"</li>
+</ul>
+<h4 id="3">类比 3：重复壁纸<a class="headerlink" href="#3" title="Permanent link">&para;</a></h4>
+<p>想象一面无限大的墙壁贴着<strong>重复花纹</strong>的壁纸：</p>
+<ul>
+<li><strong><span class="arithmatex">\(\vec{k}\)</span>（跨块相位）</strong>：一块壁纸相对下一块有没有"偏移"？</li>
+<li><span class="arithmatex">\(\vec{k}=0\)</span> 所有块完全一样</li>
+<li>
+<p><span class="arithmatex">\(\vec{k} \neq 0\)</span> 每块相对前一块有相位平移</p>
+</li>
+<li>
+<p><strong><span class="arithmatex">\(\vec{G}\)</span>（块内细节）</strong>：<strong>一块壁纸自身的花纹</strong>长什么样</p>
+</li>
+<li>花纹有多复杂就需要多少 <span class="arithmatex">\(\vec{G}\)</span> 分量</li>
+</ul>
+<p><strong>关键</strong>：这是<strong>两个独立的问题</strong>——
+- "跨块怎么排"（长尺度）
+- "块内长啥样"（短尺度）</p>
+<p>回答其中一个不回答另一个，都无法还原整面墙的图案。</p>
+<h3 id="_28">精确技术区别<a class="headerlink" href="#_28" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th><span class="arithmatex">\(\vec{k}\)</span>（BZ 内）</th>
+<th><span class="arithmatex">\(\vec{G}\)</span>（倒格点）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通俗说</strong></td>
+<td>跨原胞的"同步节奏"</td>
+<td>原胞内的"分布细节"</td>
+</tr>
+<tr>
+<td><strong>尺度</strong></td>
+<td>长波（原胞到晶体尺寸）</td>
+<td>短波（原子核到原胞）</td>
+</tr>
+<tr>
+<td><strong>取值</strong></td>
+<td>BZ 内<strong>连续</strong>（有限采样后离散）</td>
+<td>离散倒格点（无限多，但可截断）</td>
+</tr>
+<tr>
+<td><strong>数量</strong>（Si 原胞）</td>
+<td><span class="arithmatex">\(\sim 30\)</span>（不可约 k 点）</td>
+<td><span class="arithmatex">\(\sim 10^3\)</span>（<code>ecutwfc=40</code> 下的平面波数）</td>
+</tr>
+<tr>
+<td><strong>QE 参数</strong></td>
+<td><code>K_POINTS</code></td>
+<td><code>ecutwfc</code></td>
+</tr>
+<tr>
+<td><strong>所属化简</strong></td>
+<td>化简 7 (Bloch) + 9 (采样)</td>
+<td>化简 8 (平面波基组)</td>
+</tr>
+<tr>
+<td><strong>数学角色</strong></td>
+<td>给每个电子态贴<strong>标签</strong>（<span class="arithmatex">\(\phi_{n,\vec{k}}\)</span>）</td>
+<td>在每个 <span class="arithmatex">\(\vec{k}\)</span> 下做<strong>基组展开</strong></td>
+</tr>
+<tr>
+<td><strong>物理动机</strong></td>
+<td>利用平移对称性（Bloch 定理）</td>
+<td>数值离散化（把 PDE 变矩阵）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ml_2">ML 类比：两种信息分离<a class="headerlink" href="#ml_2" title="Permanent link">&para;</a></h3>
+<p>像 Transformer 里的两种结构：
+- <strong>跨 token 的自注意力</strong> ↔ <span class="arithmatex">\(\vec{k}\)</span>（跨原胞关系）
+- <strong>每个 token 的 embedding 维度</strong> ↔ <span class="arithmatex">\(\vec{G}\)</span>（原胞内细节）</p>
+<p>或 CNN：
+- <strong>Feature map 的空间维度</strong>（整体布局）↔ <span class="arithmatex">\(\vec{k}\)</span>
+- <strong>每个空间位置的 channel 维度</strong>（局部特征）↔ <span class="arithmatex">\(\vec{G}\)</span></p>
+<p>一个描述"整体"，一个描述"局部"——两者独立且互补。</p>
+<h3 id="_29">完整波函数怎么体现这两种频率<a class="headerlink" href="#_29" title="Permanent link">&para;</a></h3>
+<p>把 Bloch 波展开：</p>
+<div class="arithmatex">\[\phi_{n,\vec{k}}(\vec{r}) = e^{i\vec{k}\cdot\vec{r}} \cdot \underbrace{\sum_{\vec{G}} c_{n,\vec{k}}(\vec{G}) e^{i\vec{G}\cdot\vec{r}}}_{u_{n,\vec{k}}(\vec{r}) \text{ 周期部分}}\]</div>
+<ul>
+<li><span class="arithmatex">\(e^{i\vec{k}\cdot\vec{r}}\)</span>：<strong>长波包络</strong>，跨原胞慢变化</li>
+<li><span class="arithmatex">\(\sum_{\vec{G}} c_{n,\vec{k}}(\vec{G}) e^{i\vec{G}\cdot\vec{r}}\)</span>：<strong>原胞内细节</strong>，由多个短波叠加</li>
+</ul>
+<p>合起来 = <span class="arithmatex">\(\sum_{\vec{G}} c_{n,\vec{k}}(\vec{G}) e^{i(\vec{k}+\vec{G})\cdot\vec{r}}\)</span>，总共是 <span class="arithmatex">\((\vec{k}+\vec{G})\)</span> 平面波的和。</p>
+<h3 id="qe_1">在 QE 输入里的直接对应<a class="headerlink" href="#qe_1" title="Permanent link">&para;</a></h3>
+<p>你之前看的 Si vc-relax 输入：</p>
+<div class="language-fortran highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">&amp;</span><span class="nb">SYSTEM</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">  </span><span class="n">ecutwfc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="mf">0.0</span><span class="w">          </span><span class="c">! ← 控制 G 截断（原胞内细节精度）</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p">...</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="o">/</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">K_POINTS</span><span class="w"> </span><span class="n">automatic</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="mi">8</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w">              </span><span class="c">! ← 控制 k 采样（跨原胞节奏点数）</span>
+</span></code></pre></div>
+<p><strong>两个参数控制两件独立的事</strong>：
+- <code>ecutwfc</code> 调高 → 保留更多短波 <span class="arithmatex">\(\vec{G}\)</span>，原胞内细节更精确
+- <code>K_POINTS</code> 调密 → 采样更多 <span class="arithmatex">\(\vec{k}\)</span>，跨原胞积分更准</p>
+<p>两者都要够大才能得到准确结果，但<strong>调其中一个不替代另一个</strong>。</p>
+<h3 id="_30">总结：两种频率的本质区别<a class="headerlink" href="#_30" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><span class="arithmatex">\(\vec{k}\)</span></th>
+<th><span class="arithmatex">\(\vec{G}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通俗定义</td>
+<td>跨原胞的同步节奏</td>
+<td>原胞内部的分布细节</td>
+</tr>
+<tr>
+<td>波长</td>
+<td>长（原胞尺寸→晶体尺寸）</td>
+<td>短（原子核尺寸→原胞尺寸）</td>
+</tr>
+<tr>
+<td>QE 参数</td>
+<td><code>K_POINTS</code></td>
+<td><code>ecutwfc</code></td>
+</tr>
+<tr>
+<td>决定</td>
+<td>标签电子态身份</td>
+<td>展开原胞内波形</td>
+</tr>
+</tbody>
+</table>
+<p>一句话：<strong><span class="arithmatex">\(\vec{k}\)</span> 是"整体如何排列"，<span class="arithmatex">\(\vec{G}\)</span> 是"局部长什么样"</strong>——两个独立维度。</p>
+<hr />
+<h4 id="1bz-veck">层 1：BZ 内的 <span class="arithmatex">\(\vec{k}\)</span>——"跨原胞"的长波相位<a class="headerlink" href="#1bz-veck" title="Permanent link">&para;</a></h4>
+<ul>
+<li>描述：电子波函数跨相邻原胞时的相位变化率</li>
+<li>取值范围：BZ 内（有限区域）</li>
+<li><strong>连续变量</strong>（或有限 k 点采样后的离散）</li>
+<li>由 Bloch 定理引入</li>
+</ul>
+<h4 id="2-vecg">层 2：倒格点 <span class="arithmatex">\(\vec{G}\)</span>——"原胞内部"的短波细节<a class="headerlink" href="#2-vecg" title="Permanent link">&para;</a></h4>
+<ul>
+<li>描述：原胞内部 <span class="arithmatex">\(u_{n,\vec{k}}(\vec{r})\)</span> 的空间频率结构</li>
+<li>取值：倒格点（离散的 3D 网格）</li>
+<li><strong>无限延伸</strong>（但实际被 <code>ecutwfc</code> 截断）</li>
+<li>用于化简 8 的平面波展开：<span class="arithmatex">\(u_{n,\vec{k}}(\vec{r}) = \sum_{\vec{G}} c_{n,\vec{k}}(\vec{G}) e^{i\vec{G}\cdot\vec{r}}\)</span></li>
+</ul>
+<h4 id="_31">两层关系图<a class="headerlink" href="#_31" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>倒空间（完整）
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── 近原点的有限区域 = BZ
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│     ↑
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│     这里取 k 点（跨原胞相位）
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│     每个 k 是一个独立 KS 子问题
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>└── 离原点远的倒格点 G（无限多）
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      ↑
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>      这里用作平面波展开系数（原胞内细节）
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      ecutwfc 截断高频 G
+</span></code></pre></div>
+<p><strong>完整的 Bloch 电子波</strong>：
+$<span class="arithmatex">\(\phi_{n,\vec{k}}(\vec{r}) = e^{i\vec{k}\cdot\vec{r}} \sum_{\vec{G}} c_{n,\vec{k}}(\vec{G}) e^{i\vec{G}\cdot\vec{r}} = \sum_{\vec{G}} c_{n,\vec{k}}(\vec{G}) e^{i(\vec{k}+\vec{G})\cdot\vec{r}}\)</span>$</p>
+<p>所以<strong>每条 Bloch 能带的波函数 = 一组 <span class="arithmatex">\((\vec{k}+\vec{G})\)</span> 平面波的叠加</strong>——既用了 BZ 内的 <span class="arithmatex">\(\vec{k}\)</span>（长波包络），也用了倒格点 <span class="arithmatex">\(\vec{G}\)</span>（短波细节）。</p>
+<h3 id="veck_3">关键差别：每个 <span class="arithmatex">\(\vec{k}\)</span> 不只是"一个傅里叶系数"<a class="headerlink" href="#veck_3" title="Permanent link">&para;</a></h3>
+<p>普通傅里叶变换中，每个频率 <span class="arithmatex">\(\omega\)</span> 对应<strong>一个复数振幅</strong> <span class="arithmatex">\(F(\omega)\)</span>——单一数字。</p>
+<p>晶体里每个 <span class="arithmatex">\(\vec{k}\)</span> 对应：
+- 一个<strong>独立的 KS 方程</strong>（原胞级）
+- 多条能带 <span class="arithmatex">\(\varepsilon_n(\vec{k})\)</span>（<span class="arithmatex">\(n = 1, 2, \ldots, N_{bnd}\)</span>）
+- 每条能带对应一个<strong>原胞内 3D 波函数</strong> <span class="arithmatex">\(u_{n,\vec{k}}(\vec{r})\)</span></p>
+<p>所以 Bloch 比傅里叶变换<strong>丰富得多</strong>——不是把信号拆成简单的频率系数，而是把晶体拆成"每个 <span class="arithmatex">\(\vec{k}\)</span> 下的一组独立 KS 解"。</p>
+<h3 id="dft">完整类比表（信号处理 ↔ 晶体 DFT）<a class="headerlink" href="#dft" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>信号处理</th>
+<th>晶体 DFT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始函数</td>
+<td>信号 <span class="arithmatex">\(f(t)\)</span></td>
+<td>波函数 <span class="arithmatex">\(\psi(\vec{r})\)</span></td>
+</tr>
+<tr>
+<td>傅里叶对偶空间</td>
+<td>频率 <span class="arithmatex">\(\omega\)</span> 空间</td>
+<td>倒空间 <span class="arithmatex">\(\vec{k}\)</span></td>
+</tr>
+<tr>
+<td>周期单元</td>
+<td>信号周期 <span class="arithmatex">\(T\)</span></td>
+<td>原胞（周期向量 <span class="arithmatex">\(\vec{a}\)</span>）</td>
+</tr>
+<tr>
+<td>独立频率范围</td>
+<td><span class="arithmatex">\([0, 2\pi/T)\)</span> 或奈奎斯特区</td>
+<td>第一布里渊区</td>
+</tr>
+<tr>
+<td>离散频率分量</td>
+<td>倍频 <span class="arithmatex">\(n\omega_0\)</span></td>
+<td>倒格点 <span class="arithmatex">\(\vec{G}\)</span></td>
+</tr>
+<tr>
+<td>每个频率存什么</td>
+<td>一个振幅 <span class="arithmatex">\(F(\omega)\)</span>（单复数）</td>
+<td>一组 <span class="arithmatex">\(\{\varepsilon_n(\vec{k}), u_{n,\vec{k}}(\vec{r})\}\)</span>（需独立解 KS）</td>
+</tr>
+<tr>
+<td>还原物理量</td>
+<td><span class="arithmatex">\(f(t) = \int F(\omega) e^{i\omega t} d\omega\)</span></td>
+<td><span class="arithmatex">\(\rho(\vec{r}) = \sum_n \int_{BZ} f_{n,\vec{k}}\|\phi_{n,\vec{k}}(\vec{r})\|^2 d\vec{k}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_32">总结<a class="headerlink" href="#_32" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>你的直觉</th>
+<th>评估</th>
+<th>细化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>倒空间 = 频率空间</td>
+<td>✅</td>
+<td>更精确：空间频率空间</td>
+</tr>
+<tr>
+<td>BZ = 频率范围</td>
+<td>✅</td>
+<td>独立频率代表区（奈奎斯特区类比）</td>
+</tr>
+<tr>
+<td>对每个频率的物性积分</td>
+<td>✅</td>
+<td>严格说每个 <span class="arithmatex">\(\vec{k}\)</span> 对应一组 KS 解而非单一系数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>补充</strong>：倒空间有<strong>两种频率</strong>——BZ 内的 <span class="arithmatex">\(\vec{k}\)</span>（跨原胞长波）+ 倒格点 <span class="arithmatex">\(\vec{G}\)</span>（原胞内短波）。化简 7 用前者（Bloch 分块），化简 8 用后者（平面波展开）。</p>
+<hr />
+<h4 id="2-bz">层次 2：对 BZ 积分 / 求和（"全局量"）<a class="headerlink" href="#2-bz" title="Permanent link">&para;</a></h4>
+<p>所有物理量都是对 BZ 的积分：</p>
+<p><strong>电子密度</strong>（送回化简 4 的 <span class="arithmatex">\(V_{eff}\)</span>）：
+$<span class="arithmatex">\(\rho(\vec{r}) = \sum_n \int_{BZ} f_{n,\vec{k}} \, |\phi_{n,\vec{k}}(\vec{r})|^2 \, \frac{d\vec{k}}{(2\pi)^3}\)</span>$</p>
+<p><strong>总能量</strong>（化简 4 的目标）：
+$<span class="arithmatex">\(E_{total} = T_s + V_{ext}[\rho] + J[\rho] + E_{xc}[\rho] + E_{nuc\text{-}nuc}\)</span>$</p>
+<p>每项都是 BZ 积分。</p>
+<p><strong>态密度 DOS</strong>：
+$<span class="arithmatex">\(g(E) = \sum_n \int_{BZ} \delta(E - \varepsilon_n(\vec{k})) \frac{d\vec{k}}{(2\pi)^3}\)</span>$</p>
+<p><strong>能带图</strong>：<span class="arithmatex">\(\varepsilon_n(\vec{k})\)</span> 沿 BZ 高对称路径扫描。</p>
+<p><strong>带隙</strong>：
+$<span class="arithmatex">\(E_{gap} = \min_{\vec{k}} \varepsilon_{CBM}(\vec{k}) - \max_{\vec{k}} \varepsilon_{VBM}(\vec{k})\)</span>$</p>
+<h3 id="_33">和前面化简的具体对应<a class="headerlink" href="#_33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>化简</th>
+<th>贡献了什么</th>
+<th>在 BZ 分块视角下的作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 BO</strong></td>
+<td>核位置 <span class="arithmatex">\(\{\vec{R}_I\}\)</span> 周期排列 → 周期势 <span class="arithmatex">\(V_{ext}(\vec{r})\)</span></td>
+<td>周期性让 Bloch 分解成立</td>
+</tr>
+<tr>
+<td><strong>2 Slater</strong></td>
+<td>单电子轨道形式</td>
+<td><span class="arithmatex">\(\Psi\)</span> 是 Bloch 轨道的 Slater 行列式</td>
+</tr>
+<tr>
+<td><strong>3 HK</strong></td>
+<td>基态密度决定一切</td>
+<td>"只需算 <span class="arithmatex">\(\rho\)</span>"在晶体里成立</td>
+</tr>
+<tr>
+<td><strong>4 KS</strong></td>
+<td>KS 方程 + <span class="arithmatex">\(V_{eff}[\rho]\)</span></td>
+<td>提供每个 k 要解的具体算符 <span class="arithmatex">\(\hat{H}_{KS}\)</span></td>
+</tr>
+<tr>
+<td><strong>5 XC</strong></td>
+<td><span class="arithmatex">\(V_{xc}[\rho]\)</span> 具体形式</td>
+<td>填入 <span class="arithmatex">\(\hat{H}_{KS}\)</span></td>
+</tr>
+<tr>
+<td><strong>6 赝势</strong></td>
+<td>电子数从全电子变价电子</td>
+<td>减少每个 k 点的矩阵规模</td>
+</tr>
+<tr>
+<td><strong>7 Bloch (本篇)</strong></td>
+<td><strong>按 k 分块 + <span class="arithmatex">\((n, \vec{k})\)</span> 标签</strong></td>
+<td>让求解可实际分块</td>
+</tr>
+<tr>
+<td><strong>8 平面波</strong></td>
+<td>每个 k 内用平面波展开 <span class="arithmatex">\(u_{n,\vec{k}}\)</span></td>
+<td>PDE → 矩阵特征值</td>
+</tr>
+<tr>
+<td><strong>9 k 采样</strong></td>
+<td>BZ 积分 → 有限 k 求和</td>
+<td>让 BZ 积分可数值实现</td>
+</tr>
+<tr>
+<td><strong>10 对称性</strong></td>
+<td>等价 k 只算一次</td>
+<td>独立 k 数量压缩</td>
+</tr>
+<tr>
+<td><strong>11 SCF</strong></td>
+<td><span class="arithmatex">\(V_{eff} \leftrightarrow \rho\)</span> 循环</td>
+<td>每次迭代对所有 k 对角化</td>
+</tr>
+<tr>
+<td><strong>12 BFGS</strong></td>
+<td>外层调核位置</td>
+<td>每步都重跑 7–11</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dft-k">把整个 DFT 流程串起来（"k 分块视图"）<a class="headerlink" href="#dft-k" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>外层：BFGS 调原子位置 {R_I}   (化简 12)
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    │
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    ▼
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>更新周期势 V_ext(r)            (化简 1, 6)
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    │
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    ▼
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>┌─── SCF 迭代（化简 11）────────────────┐
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│                                       │
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│   构造 V_eff = V_ext + V_H[ρ] + V_xc[ρ] (化简 4, 5)
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│                                       │
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│   对每个不可约 k 点（化简 9, 10）：      │
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│     ↓                                 │
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>│     构造 Ĥ_KS(k) 矩阵（平面波基，化简 8）│
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│     ↓                                 │
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│     对角化 → {ε_n(k), φ_{n,k}}         │
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│                                       │
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│   所有 k 合起来（BZ 积分）：              │
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│     ↓                                 │
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│     ρ(r) = Σ ∫_BZ f |φ|² dk/(2π)³    │
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>│     E = T_s + V_ext + J + E_xc        │
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>│                                       │
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>│   检查 ρ_new vs ρ_old：                │
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│     未收敛 → 混合 ρ，回到 V_eff         │
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│     收敛 → 跳出                        │
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>└────────────────────────────────────────┘
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    │
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    ▼
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>算力 F_I 和应力 σ              (化简 12)
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    │
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>    ▼
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>BFGS 调 {R_I} 或晶格           (化简 12)
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    │
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    └── 回到顶端
+</span></code></pre></div>
+<p><strong>化简 7 的位置</strong>：让 SCF 内循环的"解 KS"部分可以<strong>并行按 k 分块</strong>——每个 k 独立，然后积分起来。</p>
+<h3 id="_34">为什么这么设计关键<a class="headerlink" href="#_34" title="Permanent link">&para;</a></h3>
+<ul>
+<li>没有 Bloch 分块：<span class="arithmatex">\(10^{23}\)</span> 维 KS 方程，不可行</li>
+<li>有了 Bloch 分块：</li>
+<li>~30 个不可约 k 点，每个 <span class="arithmatex">\(\sim 10^3\)</span> 维</li>
+<li>两层积分：每 k 对角化 + 对 k 加权求和</li>
+<li>总算力：<span class="arithmatex">\(O(10^{69}) \to O(10^{13})\)</span>——可在 CPU 秒级跑完</li>
+</ul>
+<h3 id="qe-scf">QE 一次 SCF 迭代的样子<a class="headerlink" href="#qe-scf" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>iteration # 1     ecut=    40.00 Ry     beta= 0.70
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Davidson diagonalization with overlap       ← 每个 k 都做
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ethr =  1.00E-02
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>avg # of iterations =  2.5                  ← 平均 Davidson 步数
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>total cpu time ...
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>     total energy              =    -16.92 Ry   ← BZ 积分后的总能量
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>iteration # 2
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>...
+</span></code></pre></div>
+<p>每次 iteration 的操作：
+1. 构造 <span class="arithmatex">\(V_{eff}\)</span>
+2. <strong>对所有 k 点（常并行）做 Davidson 对角化</strong>（层次 1）
+3. 用新结果算 <span class="arithmatex">\(\rho_{new}\)</span>（层次 2 积分）
+4. 比较新旧 <span class="arithmatex">\(\rho\)</span> 并混合
+5. 输出 <code>total energy</code></p>
+<p>QE 的 k 点并行（<code>-npool</code>）把不同 k 分给不同进程——因为它们互相独立。</p>
+<h3 id="bz_1">BZ 积分的物理意义（举例）<a class="headerlink" href="#bz_1" title="Permanent link">&para;</a></h3>
+<p><strong>金属的电子密度</strong>：费米面上"有多少 k"直接决定局部电子浓度，必须做 BZ 积分</p>
+<p><strong>半导体的带隙</strong>：VBM 可能在 Γ，CBM 可能在 X——<strong>必须采样多个 k 才能找到真正的极值</strong></p>
+<p><strong>磁性</strong>：<span class="arithmatex">\(\rho_\uparrow - \rho_\downarrow\)</span> 对每个 k 分别积分 up/down</p>
+<h3 id="_35">简洁总结<a class="headerlink" href="#_35" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>什么</th>
+<th>在 BZ 分块视角</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>每个 k 算什么</strong></td>
+<td>一个局部 KS 本征值问题 → <span class="arithmatex">\(\{\varepsilon_n(\vec{k}), \phi_{n,\vec{k}}\}\)</span></td>
+</tr>
+<tr>
+<td><strong>所有 k 合起来算什么</strong></td>
+<td>对 BZ 积分：<span class="arithmatex">\(\rho\)</span>、<span class="arithmatex">\(E\)</span>、DOS、能带、带隙</td>
+</tr>
+<tr>
+<td><strong>前面化简的作用</strong></td>
+<td>1–6 决定"要解什么 KS 方程"；7 把它分块按 k</td>
+</tr>
+<tr>
+<td><strong>后面化简的作用</strong></td>
+<td>8 离散化每个 k；9–10 离散 BZ 积分；11 SCF；12 外层优化</td>
+</tr>
+</tbody>
+</table>
+<p><strong>一句话</strong>：Bloch + BZ 把"<span class="arithmatex">\(10^{23}\)</span> 维 KS 方程"变成"~30 个独立原胞级子问题 + BZ 积分得到全局量"——这是 DFT 在晶体上实际可跑的根本原因。</p>
+<hr />
+<h2 id="7">本轮 7 个问题速览（更新）<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>主题</th>
+<th>核心</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>"直觉"像天书</td>
+<td>"<span class="arithmatex">\(\hat{H}\)</span> 与 <span class="arithmatex">\(\hat{T}\)</span> 对易" = 晶体处处一样；"本征值是相位" = 挪不能改变概率</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 哪来？BZ 是什么</td>
+<td><span class="arithmatex">\(\vec{k}\)</span> 是"挪一原胞差的相位速率"；<span class="arithmatex">\(\vec{k}+\vec{G}\)</span> 等价；BZ 是代表区</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>倒格矢通俗解释</td>
+<td>傅里叶级数允许频率的 3D 版本</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>BZ 与倒格点间距</td>
+<td>BZ 大小 ~ 最近邻倒格点距离的一半</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>新词从哪来</td>
+<td>化简 7 第一次专门针对晶体，之前是更一般问题</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>"k 点"是什么</td>
+<td>倒空间里坐标为 <span class="arithmatex">\(\vec{k}\)</span> 的点</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td>BZ 视角下算什么？怎样和前面连接</td>
+<td>两层：<strong>每 k 独立解 KS</strong> + <strong>对 BZ 积分</strong>得到 <span class="arithmatex">\(\rho\)</span>/<span class="arithmatex">\(E\)</span>/DOS；化简 7 把 KS 按 k 分块，让 <span class="arithmatex">\(10^{23}\)</span> 维问题变成 ~30 个原胞级子问题</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

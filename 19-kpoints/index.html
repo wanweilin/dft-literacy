@@ -1,0 +1,2423 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="TritonDFT / DFTBench 学习笔记">
+      
+      
+        <meta name="author" content="Weilin Wan">
+      
+      
+      
+        <link rel="prev" href="../18-plane-wave-basis/">
+      
+      
+        <link rel="next" href="../19-kpoints-qa/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>化简 9 k 点采样 - DFT 扫盲笔记</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#19-k-9" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="DFT 扫盲笔记" class="md-header__button md-logo" aria-label="DFT 扫盲笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DFT 扫盲笔记
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              化简 9 k 点采样
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../00-simplification-chain/" class="md-tabs__link">
+          
+  
+  
+  总览
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../10-qm-basics/" class="md-tabs__link">
+          
+  
+  
+  QM 基础
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../11-born-oppenheimer/" class="md-tabs__link">
+          
+  
+  
+  电子结构核心
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../16-pseudopotential/" class="md-tabs__link">
+          
+  
+  
+  数值实现
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../30-observables/" class="md-tabs__link">
+          
+  
+  
+  物性与材料
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../99-dftbench-terms/" class="md-tabs__link">
+          
+  
+  
+  反查与自测
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DFT 扫盲笔记" class="md-nav__button md-logo" aria-label="DFT 扫盲笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DFT 扫盲笔记
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    总览
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    总览
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-simplification-chain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简链总图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-simplification-chain-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简链 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-keywords-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关键词索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM 基础
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    QM 基础
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-qm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    量子力学前置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-qm-basics-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM 基础 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    电子结构核心
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    电子结构核心
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-born-oppenheimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 1 Born-Oppenheimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-born-oppenheimer-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 1 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-slater-determinant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 2 Slater 行列式
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-slater-determinant-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 2 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-hk-theorem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 3 HK 定理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-hk-theorem-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 3 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-kohn-sham/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 4 Kohn-Sham
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-kohn-sham-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 4 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-xc-functional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 5 XC 泛函
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-xc-functional-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 5 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数值实现
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    数值实现
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-pseudopotential/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 6 赝势
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-pseudopotential-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 6 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-bloch-bz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 Bloch 与 BZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-bloch-bz-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-plane-wave-basis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 8 平面波基组
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 k 点采样
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 k 点采样
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 化简位置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 上一步的困难
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 引入的假设 / 近似
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 引入的假设 / 近似">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-monkhorst-pack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 主要方案：Monkhorst-Pack 网格
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-shifted-grid-vs-gamma-centered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 副方案：shifted grid vs gamma-centered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-smearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 金属的 smearing 近似
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 引入的新概念
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 引入的新概念">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-k-k-meshk-grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 k 点、k-mesh、k-grid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-monkhorst-pack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Monkhorst-Pack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-gamma-centered-vs-shifted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 gamma-centered vs shifted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-bz-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 倒易关系：原胞大小 ↔ BZ 大小 ↔ k 密度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-smearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 smearing 相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-tetrahedron" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 tetrahedron 方法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 非结构化采样
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-qe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 对应 QE 字段
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 对应 QE 字段">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-k_points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 K_POINTS 卡片
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 金属相关 &amp;SYSTEM 字段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 输出验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 对应 benchmark 条目
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 对应 benchmark 条目">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 agent 参数推断
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 评分影响
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 材料类别 × k 点策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-ml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. ML 类比
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. ML 类比">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-k-quadrature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 k 点采样 = 数值积分的 quadrature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-smearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 smearing = 硬阈值的温度软化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 对称性压缩 k 点 = 共享计算
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-nyquist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 倒易关系 = 频域 Nyquist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-k-ablation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 k 点收敛测试 = ablation 扫超参
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 典型取值与常见坑
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 典型取值与常见坑">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 典型 k 点网格
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-smearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 典型 smearing 参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 常见坑
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-benchmark-k" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 benchmark 中的 k 点问题
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        下一步阅读
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-kpoints-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-symmetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 10 对称性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-scf-iteration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 11 SCF 迭代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-bfgs-relax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 12 BFGS 弛豫
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    物性与材料
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    物性与材料
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-observables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DFT 输出物性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-observables-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DFT 输出物性 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../31-material-categories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 大材料类别
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反查与自测
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反查与自测
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../99-dftbench-terms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字段反查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../99-self-test/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    自测题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="19-k-9">19. k 点采样（化简 9）<a class="headerlink" href="#19-k-9" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>化简 8 把波函数展开到有限平面波基，每个 <span class="arithmatex">\(\vec{k}\)</span> 变成一个有限维矩阵特征值问题。但一个完整 DFT 计算要对<strong>整个布里渊区（BZ）做积分</strong>——物理量（总能量、密度、力）都是 BZ 上 <span class="arithmatex">\(\vec{k}\)</span> 的积分。<span class="arithmatex">\(\vec{k}\)</span> 本身仍是连续变量，必须离散化。这一步就是"用有限个 k 点近似连续积分"——和 ML 里蒙特卡洛采样 / quadrature 完全同构。</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 化简位置<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>12 步化简链中的<strong>第 9 步</strong>：k 点采样（k-point sampling）。</p>
+<ul>
+<li>前一步：化简 8 把每个 <span class="arithmatex">\(\vec{k}\)</span> 上的 KS 方程变成有限维矩阵特征值问题</li>
+<li>本步：对整个 BZ 的 <span class="arithmatex">\(\vec{k}\)</span> 积分离散为有限点求和</li>
+<li>下一步：化简 10（对称性）——用空间群压缩 k 点网格到不可约 BZ</li>
+</ul>
+<hr />
+<h2 id="2">2. 上一步的困难<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>化简 7 后，任何"整体"物理量都是<strong>对 BZ 积分</strong>：</p>
+<div class="arithmatex">\[\rho(\vec{r}) = \frac{2}{V_{\text{BZ}}} \sum_n \int_{\text{BZ}} f_{n,\vec{k}} \, |\phi_{n,\vec{k}}(\vec{r})|^2 \, d\vec{k}\]</div>
+<div class="arithmatex">\[E_{\text{band}} = \frac{2}{V_{\text{BZ}}} \sum_n \int_{\text{BZ}} f_{n,\vec{k}} \, \varepsilon_{n,\vec{k}} \, d\vec{k}\]</div>
+<p>（因子 2 来自自旋求和；<span class="arithmatex">\(f_{n,\vec{k}}\)</span> 是占据数：绝缘体 0 或 1，金属在费米面附近是分数）</p>
+<p>连续积分不可计算。必须<strong>采样</strong>：选一组 k 点 <span class="arithmatex">\(\{\vec{k}_i\}\)</span> 和权重 <span class="arithmatex">\(\{w_i\}\)</span>，用</p>
+<div class="arithmatex">\[\int_{\text{BZ}} f(\vec{k}) \, d\vec{k} \approx \sum_i w_i f(\vec{k}_i)\]</div>
+<p>近似。问题是：<strong>怎么选 k 点？多少 k 点够？</strong></p>
+<hr />
+<h2 id="3">3. 引入的假设 / 近似<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h3 id="31-monkhorst-pack">3.1 主要方案：Monkhorst-Pack 网格<a class="headerlink" href="#31-monkhorst-pack" title="Permanent link">&para;</a></h3>
+<p><strong>假设</strong>：BZ 上用均匀网格采样就够。定义 <span class="arithmatex">\(N_1 \times N_2 \times N_3\)</span> 个点：</p>
+<div class="arithmatex">\[\vec{k}_{ijk} = \frac{n_1 + s_1}{N_1} \vec{b}_1 + \frac{n_2 + s_2}{N_2} \vec{b}_2 + \frac{n_3 + s_3}{N_3} \vec{b}_3\]</div>
+<p>其中 <span class="arithmatex">\(\vec{b}_i\)</span> 是倒格子基矢，<span class="arithmatex">\(n_i \in \{0, 1, ..., N_i - 1\}\)</span>，<span class="arithmatex">\((s_1, s_2, s_3)\)</span> 是偏移向量。</p>
+<p><strong>代价</strong>：
+- 采样不足 → 能量、力、应力收敛不充分，结果随 k 密度变化
+- 金属尤其敏感（费米面不连续需要密集采样才能积分准）
+- 需要做 <strong>k 点收敛性测试</strong></p>
+<h3 id="32-shifted-grid-vs-gamma-centered">3.2 副方案：shifted grid vs gamma-centered<a class="headerlink" href="#32-shifted-grid-vs-gamma-centered" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>offset = (0, 0, 0)</code> → <strong>gamma-centered</strong>：网格含 <span class="arithmatex">\(\Gamma\)</span> 点（<span class="arithmatex">\(\vec{k}=0\)</span>）</li>
+<li><code>offset = (1, 1, 1)</code> → <strong>half-shifted</strong>：网格偏移半个格距，不含 <span class="arithmatex">\(\Gamma\)</span></li>
+<li>六方（hexagonal）晶格有时 shifted 会破坏对称性，一般<strong>推荐 gamma-centered</strong></li>
+</ul>
+<h3 id="33-smearing">3.3 金属的 smearing 近似<a class="headerlink" href="#33-smearing" title="Permanent link">&para;</a></h3>
+<p>金属的费米面在 BZ 里是一个曲面；<span class="arithmatex">\(f_{n,\vec{k}}\)</span> 从 1 跳到 0 是<strong>硬阈值</strong>，做数值积分时任何采样网格都会抖动。解决方案：<strong>"软化"费米分布</strong>，给部分占据：</p>
+<div class="arithmatex">\[f_{n,\vec{k}} = f\left(\frac{\varepsilon_{n,\vec{k}} - E_F}{\sigma}\right)\]</div>
+<p><span class="arithmatex">\(\sigma\)</span>（<code>degauss</code>）是 smearing 宽度。常见形式：
+- <strong>Fermi-Dirac</strong>：真实的有限温度分布
+- <strong>Gaussian</strong>：数学简单
+- <strong>Methfessel-Paxton (MP)</strong>：高阶修正，对金属金标准
+- <strong>cold / Marzari-Vanderbilt</strong>：适合金属弛豫</p>
+<hr />
+<h2 id="4">4. 引入的新概念<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<h3 id="41-k-k-meshk-grid">4.1 k 点、k-mesh、k-grid<a class="headerlink" href="#41-k-k-meshk-grid" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>k 点</strong>：BZ 里一个离散采样点</li>
+<li><strong>k-mesh / k-grid</strong>：多个 k 点组成的采样集合</li>
+<li><strong>权重（weight）</strong>：每个 k 点对 BZ 积分的贡献权重（对称压缩后不相等）</li>
+</ul>
+<h3 id="42-monkhorst-pack">4.2 Monkhorst-Pack<a class="headerlink" href="#42-monkhorst-pack" title="Permanent link">&para;</a></h3>
+<p>1976 年 Monkhorst &amp; Pack 证明：对均匀 <span class="arithmatex">\(N_1 \times N_2 \times N_3\)</span> 网格，任何<strong>平滑周期函数</strong>的 BZ 积分误差随 <span class="arithmatex">\(N^{-2}\)</span>（或更快）收敛。这是 k 点采样的理论基础。</p>
+<h3 id="43-gamma-centered-vs-shifted">4.3 gamma-centered vs shifted<a class="headerlink" href="#43-gamma-centered-vs-shifted" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>gamma-centered</strong>：含 <span class="arithmatex">\(\Gamma\)</span>，对小原胞和高对称方向友好，对六方晶格必选</li>
+<li><strong>shifted</strong>：不含高对称点，有时能减少网格数（用对称压缩），但六方晶格需谨慎</li>
+</ul>
+<h3 id="44-bz-k">4.4 倒易关系：原胞大小 ↔ BZ 大小 ↔ k 密度<a class="headerlink" href="#44-bz-k" title="Permanent link">&para;</a></h3>
+<p><strong>核心直觉</strong>：原胞越大 → BZ 越小 → 需要的 k 点数越少。</p>
+<ul>
+<li>1 个原子的原胞（如 bcc Fe）：BZ 大，需要 <span class="arithmatex">\(16^3 = 4096\)</span> k 点</li>
+<li>超胞 <span class="arithmatex">\(2 \times 2 \times 2\)</span>（8 倍大）：BZ 是 1/8，<span class="arithmatex">\(8^3 = 512\)</span> 就够</li>
+<li>分子放在 20 Å 立方盒子里：BZ 几乎是个点，<strong><span class="arithmatex">\(\Gamma\)</span> 点就行</strong></li>
+<li>1 cm³ 宏观晶体：BZ 是一个几何点——<strong>单 <span class="arithmatex">\(\Gamma\)</span> 点就够</strong></li>
+</ul>
+<blockquote>
+<p>这也是"分子计算"直接用 <span class="arithmatex">\(\Gamma\)</span> 的原因。</p>
+</blockquote>
+<h3 id="45-smearing">4.5 smearing 相关<a class="headerlink" href="#45-smearing" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>occupations='smearing'</code>：启用 smearing</li>
+<li><code>smearing='mv'</code> / <code>'gauss'</code> / <code>'fd'</code> / <code>'mp'</code>：选择方法</li>
+<li><code>degauss</code>：smearing 宽度 <span class="arithmatex">\(\sigma\)</span>，单位 Ry</li>
+<li>太小：SCF 不稳定</li>
+<li>太大：改变物理（等价于加温度）</li>
+<li>典型 0.005–0.02 Ry</li>
+</ul>
+<h3 id="46-tetrahedron">4.6 tetrahedron 方法<a class="headerlink" href="#46-tetrahedron" title="Permanent link">&para;</a></h3>
+<p>另一种 BZ 积分：把 BZ 剖分成四面体，在每个四面体内用线性插值。适合<strong>高精度态密度（DOS）</strong> 和带隙计算。QE 用 <code>occupations='tetrahedra'</code> 或 <code>'tetrahedra_opt'</code>。</p>
+<h3 id="47">4.7 非结构化采样<a class="headerlink" href="#47" title="Permanent link">&para;</a></h3>
+<p>某些场景不用网格：
+- <code>K_POINTS crystal</code>：手动列出若干 k 点 + 权重
+- <code>K_POINTS crystal_b</code>：指定 BZ 中的路径（用于能带结构计算）
+- <code>K_POINTS gamma</code>：单 <span class="arithmatex">\(\Gamma\)</span> 点（专用优化路径，比 <code>automatic 1 1 1 0 0 0</code> 更快）</p>
+<hr />
+<h2 id="5-qe">5. 对应 QE 字段<a class="headerlink" href="#5-qe" title="Permanent link">&para;</a></h2>
+<h3 id="51-k_points">5.1 <code>K_POINTS</code> 卡片<a class="headerlink" href="#51-k_points" title="Permanent link">&para;</a></h3>
+<div class="language-fortran highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">K_POINTS</span><span class="w"> </span><span class="n">automatic</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="mi">8</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w">    </span><span class="c">! 8x8x8 gamma-centered Monkhorst-Pack</span>
+</span></code></pre></div>
+<p>或</p>
+<div class="language-fortran highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">K_POINTS</span><span class="w"> </span><span class="n">automatic</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="mi">8</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w">    </span><span class="c">! 8x8x8 half-shifted</span>
+</span></code></pre></div>
+<p>能带计算（非自洽）：
+<div class="language-fortran highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">K_POINTS</span><span class="w"> </span><span class="n">crystal_b</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="mi">4</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="mf">0.0</span><span class="w"> </span><span class="mf">0.0</span><span class="w"> </span><span class="mf">0.0</span><span class="w">   </span><span class="mi">20</span><span class="w">   </span><span class="c">! Gamma, 20 points to next</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="mf">0.5</span><span class="w"> </span><span class="mf">0.0</span><span class="w"> </span><span class="mf">0.0</span><span class="w">   </span><span class="mi">20</span><span class="w">   </span><span class="c">! X</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="mf">0.5</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="mf">0.0</span><span class="w">   </span><span class="mi">20</span><span class="w">   </span><span class="c">! M</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="mf">0.0</span><span class="w"> </span><span class="mf">0.0</span><span class="w"> </span><span class="mf">0.0</span><span class="w">    </span><span class="mi">1</span><span class="w">   </span><span class="c">! back to Gamma</span>
+</span></code></pre></div></p>
+<h3 id="52-system">5.2 金属相关 <code>&amp;SYSTEM</code> 字段<a class="headerlink" href="#52-system" title="Permanent link">&para;</a></h3>
+<div class="language-fortran highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">&amp;</span><span class="nb">SYSTEM</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">  </span><span class="n">occupations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;smearing&#39;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">smearing</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;mv&#39;</span><span class="w">       </span><span class="c">! Methfessel-Paxton order 1</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="n">degauss</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mf">0.02</span><span class="w">       </span><span class="c">! Ry</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="o">/</span>
+</span></code></pre></div>
+<h3 id="53">5.3 输出验证<a class="headerlink" href="#53" title="Permanent link">&para;</a></h3>
+<p>SCF 开始前 QE 打印：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>number of k points=    29
+</span></code></pre></div>
+——这是<strong>对称性压缩后</strong>的不可约 k 点数。若未对称压缩，对 <span class="arithmatex">\(8 \times 8 \times 8\)</span> 应为 512。</p>
+<hr />
+<h2 id="6-benchmark">6. 对应 benchmark 条目<a class="headerlink" href="#6-benchmark" title="Permanent link">&para;</a></h2>
+<h3 id="61-agent">6.1 agent 参数推断<a class="headerlink" href="#61-agent" title="Permanent link">&para;</a></h3>
+<p><code>tritonDFT-src</code> 中 agent 的 <code>info_query</code> 阶段为每种材料选 k 点网格。常见现象：</p>
+<ul>
+<li><strong>统一默认 <code>8 8 8 0 0 0</code></strong>：对半导体、典型原胞大概够；对金属<strong>不够</strong>（应 12 以上）；对大超胞<strong>浪费</strong></li>
+<li><strong>未启用 smearing</strong>：对金属材料直接用绝缘体默认 → SCF 不收敛</li>
+<li><strong>能带计算路径错误</strong>：不同晶系的 BZ 高对称点不同，路径要随 <code>ibrav</code> 改</li>
+</ul>
+<h3 id="62">6.2 评分影响<a class="headerlink" href="#62" title="Permanent link">&para;</a></h3>
+<ul>
+<li>弛豫晶格常数 <code>a, b, c</code>：k 点不收敛 → 能量面不准 → 弛豫坐标偏差</li>
+<li>能量：k 点决定 <span class="arithmatex">\(E_{\text{band}}\)</span> 积分精度</li>
+<li>带隙：对 nscf 的 k 密度敏感（虽然 DFTBench 当前未评分带隙）</li>
+</ul>
+<h3 id="63-k">6.3 材料类别 × k 点策略<a class="headerlink" href="#63-k" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>材料类别</th>
+<th>典型 k 网格</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分子/团簇（大真空盒）</td>
+<td><code>1 1 1</code></td>
+<td><span class="arithmatex">\(\Gamma\)</span> 点就够</td>
+</tr>
+<tr>
+<td>绝缘体（NaCl, SiO₂）</td>
+<td><code>4 4 4</code> 到 <code>6 6 6</code></td>
+<td>对称性好时更稀疏</td>
+</tr>
+<tr>
+<td>半导体（Si, GaAs）</td>
+<td><code>6 6 6</code> 到 <code>8 8 8</code></td>
+<td>标准值</td>
+</tr>
+<tr>
+<td>金属（Cu, Fe, Al）</td>
+<td><code>12 12 12</code> 到 <code>16 16 16</code> + smearing</td>
+<td>费米面敏感</td>
+</tr>
+<tr>
+<td>磁性金属（Fe, Ni）</td>
+<td><code>16 16 16</code> + smearing + <code>nspin=2</code></td>
+<td>最难收敛</td>
+</tr>
+<tr>
+<td>超胞 <span class="arithmatex">\(2\times2\times2\)</span></td>
+<td>原 k 网格除以 2</td>
+<td>倒易压缩</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-ml">7. ML 类比<a class="headerlink" href="#7-ml" title="Permanent link">&para;</a></h2>
+<h3 id="71-k-quadrature">7.1 k 点采样 = 数值积分的 quadrature<a class="headerlink" href="#71-k-quadrature" title="Permanent link">&para;</a></h3>
+<ul>
+<li>想算 <span class="arithmatex">\(\int f(x) dx\)</span>，不可能连续积分 → 采样 + 加权 = Simpson / Gauss-Legendre / Monte Carlo</li>
+<li>k 点采样就是 3D BZ 上的 quadrature；Monkhorst-Pack 是"均匀网格的梯形规则"</li>
+<li>收敛阶：<span class="arithmatex">\(O(N^{-2})\)</span> 对平滑函数；金属费米面附近不平滑 → 收敛慢得多 → 所以金属要更多 k 点</li>
+</ul>
+<h3 id="72-smearing">7.2 smearing = 硬阈值的温度软化<a class="headerlink" href="#72-smearing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>金属的"在费米面上硬截断"对应 ML 里"Heaviside 阈值"</li>
+<li>Fermi-Dirac smearing 就是<strong>给这个阈值加温度</strong>，数学上是 sigmoid-like 函数</li>
+<li>和 <strong>softmax 的温度</strong>一个味道：温度 → 0 回到 argmax（硬），温度 &gt; 0 平滑可导</li>
+<li>也像 <strong>label smoothing</strong>：把 0/1 标签软化成 <span class="arithmatex">\((1-\epsilon)/K\)</span>，让梯度更稳定</li>
+</ul>
+<h3 id="73-k">7.3 对称性压缩 k 点 = 共享计算<a class="headerlink" href="#73-k" title="Permanent link">&para;</a></h3>
+<ul>
+<li>对称性让许多 k 点物理等价（点群作用后映射到同一 Bloch 态）</li>
+<li>只在<strong>不可约 BZ</strong> 算，其他用对称恢复——相当于 <strong>CNN 用平移不变减参数、计算共享</strong></li>
+<li>详见 <a href="../20-symmetry/"><code>20-symmetry.md</code></a></li>
+</ul>
+<h3 id="74-nyquist">7.4 倒易关系 = 频域 Nyquist<a class="headerlink" href="#74-nyquist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>实空间周期越大 → 倒空间越密 → 采样网格越稀疏就够</li>
+<li>和数字信号处理的 Nyquist 定理：信号带宽越窄，采样率可以越低——<strong>同构</strong></li>
+</ul>
+<h3 id="75-k-ablation">7.5 k 点收敛测试 = ablation 扫超参<a class="headerlink" href="#75-k-ablation" title="Permanent link">&para;</a></h3>
+<p>就是 ML 里的超参扫描：固定其他参数（<code>ecutwfc</code> 已收敛），变 k 密度，画曲线看何处平台。收敛曲线形状像 <code>loss vs training_steps</code>——后期单调递减到渐近。</p>
+<hr />
+<h2 id="8">8. 典型取值与常见坑<a class="headerlink" href="#8" title="Permanent link">&para;</a></h2>
+<h3 id="81-k">8.1 典型 k 点网格<a class="headerlink" href="#81-k" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>情境</th>
+<th>k-mesh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分子 / 大超胞（&gt; 15 Å）</td>
+<td><code>1 1 1 0 0 0</code> (或 <code>K_POINTS gamma</code>)</td>
+</tr>
+<tr>
+<td>标准小原胞半导体</td>
+<td><code>6 6 6 0 0 0</code> 或 <code>8 8 8 0 0 0</code></td>
+</tr>
+<tr>
+<td>金属小原胞</td>
+<td><code>12 12 12 0 0 0</code> 到 <code>16 16 16</code></td>
+</tr>
+<tr>
+<td>磁性金属</td>
+<td><code>16 16 16</code> + smearing + spin</td>
+</tr>
+<tr>
+<td>六方晶系（graphene 等）</td>
+<td><strong>gamma-centered</strong> 必选，<code>8 8 1</code></td>
+</tr>
+<tr>
+<td>二维材料（真空方向）</td>
+<td>真空方向 k = 1，面内 <span class="arithmatex">\(N \times N\)</span></td>
+</tr>
+<tr>
+<td>能带计算</td>
+<td>路径上 20–40 点 per segment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-smearing">8.2 典型 smearing 参数<a class="headerlink" href="#82-smearing" title="Permanent link">&para;</a></h3>
+<p>金属：<code>smearing='mv'</code>，<code>degauss=0.01</code>–<code>0.02</code> Ry，<code>occupations='smearing'</code></p>
+<h3 id="83">8.3 常见坑<a class="headerlink" href="#83" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>k 点不收敛</strong>：能量随 k 密度抖动 &gt; 几 meV/atom，说明要加 k</li>
+<li><strong>金属漏 smearing</strong>：用 <code>occupations='fixed'</code> → SCF 在费米面附近反复抖 → 不收敛或锁死到错能量</li>
+<li><strong><code>degauss</code> 太大</strong>：例如 0.05 Ry 对纯金属相当于 ~800 K 温度 → 改变电子结构、低估带隙、改变磁矩</li>
+<li><strong>六方用 shifted</strong>：<span class="arithmatex">\(8 \times 8 \times 8\)</span> offset <code>1 1 1</code> 在六方 BZ 可能错过对称等价点，对称性压缩失败</li>
+<li><strong>超胞忘了减 k</strong>：<span class="arithmatex">\(2 \times 2 \times 2\)</span> 超胞仍用 <span class="arithmatex">\(8 \times 8 \times 8\)</span> → 等效 <span class="arithmatex">\(16 \times 16 \times 16\)</span>，浪费 8 倍算力</li>
+<li><strong>二维材料真空方向给了 k</strong>：z 方向真空 20 Å，给 <code>8 8 8</code> 是在"真空里采样"，只要 <code>8 8 1</code></li>
+<li><strong>能带路径错</strong>：不同 <code>ibrav</code> 的高对称点名字、坐标不同，路径要按晶格类型查（通常用 <code>seekpath</code> 或 <code>aflow</code> 生成）</li>
+<li><strong>忘记 <code>nbnd</code></strong>：金属 smearing 需要多几条空带（<code>nbnd &gt; n_occupied</code>），否则费米面附近占据不能展开</li>
+</ol>
+<h3 id="84-benchmark-k">8.4 benchmark 中的 k 点问题<a class="headerlink" href="#84-benchmark-k" title="Permanent link">&para;</a></h3>
+<ul>
+<li>agent 常对所有材料套用 <code>8 8 8</code> → 对金属不够、对大超胞浪费</li>
+<li>判断准则：若材料是金属类（<code>category: 'Metal'</code> 或 <code>'Magnetic'</code>），自动加 k + smearing</li>
+<li>未来优化方向：让 agent 根据 <code>category</code> 和原胞大小自适应选 k 网格</li>
+</ul>
+<hr />
+<h2 id="_1">下一步阅读<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../20-symmetry/"><code>20-symmetry.md</code></a></strong> — 化简 10：空间群对称性。利用对称性把本篇的 k 点网格压缩到不可约 BZ</li>
+<li><strong><a href="../21-scf-iteration/"><code>21-scf-iteration.md</code></a></strong> — 化简 11：SCF 自洽迭代。每个 k 点上的本征值问题要和 <span class="arithmatex">\(\rho\)</span> 自洽</li>
+<li><strong><a href="../22-bfgs-relax/"><code>22-bfgs-relax.md</code></a></strong> — 化简 12：外层 BFGS 结构优化</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

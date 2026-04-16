@@ -1,0 +1,2750 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="TritonDFT / DFTBench 学习笔记">
+      
+      
+        <meta name="author" content="Weilin Wan">
+      
+      
+      
+        <link rel="prev" href="../99-dftbench-terms/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>自测题 - DFT 扫盲笔记</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#99" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="DFT 扫盲笔记" class="md-header__button md-logo" aria-label="DFT 扫盲笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DFT 扫盲笔记
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              自测题
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../00-simplification-chain/" class="md-tabs__link">
+          
+  
+  
+  总览
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../10-qm-basics/" class="md-tabs__link">
+          
+  
+  
+  QM 基础
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../11-born-oppenheimer/" class="md-tabs__link">
+          
+  
+  
+  电子结构核心
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../16-pseudopotential/" class="md-tabs__link">
+          
+  
+  
+  数值实现
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../30-observables/" class="md-tabs__link">
+          
+  
+  
+  物性与材料
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../99-dftbench-terms/" class="md-tabs__link">
+          
+  
+  
+  反查与自测
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DFT 扫盲笔记" class="md-nav__button md-logo" aria-label="DFT 扫盲笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DFT 扫盲笔记
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    总览
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    总览
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-simplification-chain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简链总图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-simplification-chain-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简链 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-keywords-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关键词索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM 基础
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    QM 基础
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-qm-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    量子力学前置
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-qm-basics-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM 基础 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    电子结构核心
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    电子结构核心
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-born-oppenheimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 1 Born-Oppenheimer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-born-oppenheimer-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 1 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-slater-determinant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 2 Slater 行列式
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-slater-determinant-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 2 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-hk-theorem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 3 HK 定理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-hk-theorem-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 3 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-kohn-sham/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 4 Kohn-Sham
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-kohn-sham-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 4 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-xc-functional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 5 XC 泛函
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-xc-functional-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 5 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数值实现
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    数值实现
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-pseudopotential/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 6 赝势
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-pseudopotential-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 6 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-bloch-bz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 Bloch 与 BZ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-bloch-bz-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 7 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-plane-wave-basis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 8 平面波基组
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-kpoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 k 点采样
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-kpoints-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 9 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-symmetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 10 对称性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-scf-iteration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 11 SCF 迭代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-bfgs-relax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    化简 12 BFGS 弛豫
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    物性与材料
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    物性与材料
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-observables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DFT 输出物性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-observables-qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DFT 输出物性 QA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../31-material-categories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 大材料类别
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反查与自测
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反查与自测
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../99-dftbench-terms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字段反查表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    自测题
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    自测题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 A 部分：量子力学与化简链基础（10 题）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第 A 部分：量子力学与化简链基础（10 题）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A9
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A10
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b-qe-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 B 部分：QE 字段的物理含义（15 题）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第 B 部分：QE 字段的物理含义（15 题）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#b1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B9
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B10
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B11
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B12
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B13
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B14
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B15
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c-dftbench-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 C 部分：DFTBench 设计逻辑（10 题）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第 C 部分：DFTBench 设计逻辑（10 题）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C9
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C10
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#d-debug-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 D 部分：实战 debug 题（5 题）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第 D 部分：实战 debug 题（5 题）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#e-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 E 部分：综合题（2 题，大题）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第 E 部分：综合题（2 题，大题）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#e1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        评分与下一步
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="99">99. 自测题<a class="headerlink" href="#99" title="Permanent link">&para;</a></h1>
+<p>本篇是学习过 11–31 篇笔记后的自测清单。目标是验收：<strong>能否独立解释 DFTBench 每个字段、每种材料类别、以及每个 QE 参数的物理含义</strong>？</p>
+<p>使用方式：
+- 对每道题先自己用 1-2 句话口述答案
+- 然后翻到参考答案对照
+- 答不上来就回到对应笔记重读</p>
+<p><strong>评估标准</strong>：
+- ≥ 80% 能流利口述 → 通过阶段 D 验收，可以开始设计类 DFTBench
+- 60–80% → 标记不熟悉的题目，重点回读对应笔记
+- &lt; 60% → 建议从头按化简链顺序再过一遍</p>
+<hr />
+<h2 id="a-10">第 A 部分：量子力学与化简链基础（10 题）<a class="headerlink" href="#a-10" title="Permanent link">&para;</a></h2>
+<h3 id="a1">A1<a class="headerlink" href="#a1" title="Permanent link">&para;</a></h3>
+<p>Q：为什么 N 电子问题不能直接数值求解？具体"维度爆炸"发生在什么物理量上？</p>
+<details><summary>A</summary>
+
+多体波函数 $\Psi(\vec{r}_1, ..., \vec{r}_N)$ 是 $3N$ 维连续函数。若每个方向离散化 100 格点，存储需要 $100^{3N}$ 个复数。N=10 就是 $10^{60}$ 级——无法存储。**详见 `10-qm-basics.md` 和 `00-simplification-chain.md`**。
+</details>
+
+<h3 id="a2">A2<a class="headerlink" href="#a2" title="Permanent link">&para;</a></h3>
+<p>Q：Hohenberg-Kohn 第一定理说了什么？它给 DFT 的合法性带来什么？</p>
+<details><summary>A</summary>
+
+基态电子密度 $\rho_0(\vec{r})$（3 维）唯一决定外势 $V_{ext}$（差常数），进而唯一决定基态波函数和一切可观测量。**合法性**：DFT 用 3 维密度代替 3N 维波函数"信息无损"，但这只是存在性证明，没给出算法。**详见 `13-hk-theorem.md`**。
+</details>
+
+<h3 id="a3">A3<a class="headerlink" href="#a3" title="Permanent link">&para;</a></h3>
+<p>Q：Kohn-Sham 方程本质是什么？它解决了什么 HK 定理没解决的问题？</p>
+<details><summary>A</summary>
+
+KS 引入一个虚构的非相互作用电子系统，密度等于真实系统。**解决**：HK 定理没给 $E[\rho]$ 的形式，KS 通过映射到 N 个单粒子方程让 $E[\rho]$ 可评估（动能 $T_s$ 可算，电-核 $V_{ext}$ 可算，电-电 Hartree 可算，剩余未知部分都并入 $E_{xc}$）。**详见 `14-kohn-sham.md`**。
+</details>
+
+<h3 id="a4">A4<a class="headerlink" href="#a4" title="Permanent link">&para;</a></h3>
+<p>Q：SCF 迭代是什么的解法？类比 ML 里哪个算法？</p>
+<details><summary>A</summary>
+
+KS 方程中 $V_{eff}$ 依赖 $\rho$，$\rho$ 又由 KS 解出——鸡生蛋。SCF 是固定点迭代解法。**ML 类比：EM 算法**（E 步对角化给定 $V_{eff}$ 求 $\phi_i$，M 步算新 $\rho$ 更新 $V_{eff}$，混合 ≈ 学习率）。**详见 `21-scf-iteration.md`**。
+</details>
+
+<h3 id="a5">A5<a class="headerlink" href="#a5" title="Permanent link">&para;</a></h3>
+<p>Q：XC 泛函是什么？为什么必须近似？列出 4 个代表泛函。</p>
+<details><summary>A</summary>
+
+$E_{xc}[\rho]$ = 交换-关联泛函，是 $E[\rho]$ 中唯一未知的项。**必须近似是因为**：HK 定理没给出它的显式形式。**4 个代表**：LDA（局域）、PBE（GGA，固体事实标准）、PBEsol（PBE for solids，晶格更准）、SCAN（meta-GGA，更精确但贵）、HSE06（杂化，带隙好但贵 10-100×）。**详见 `15-xc-functional.md`**。
+</details>
+
+<h3 id="a6">A6<a class="headerlink" href="#a6" title="Permanent link">&para;</a></h3>
+<p>Q：Slater 行列式为什么"自动满足"泡利不相容？</p>
+<details><summary>A</summary>
+
+行列式性质：交换任意两行（或两列）变号。把 N 个单电子轨道填入行，N 个电子填入列 → 交换两电子（两列）让波函数变号，正好符合费米子反对称要求。**详见 `12-slater-determinant.md`**。
+</details>
+
+<h3 id="a7">A7<a class="headerlink" href="#a7" title="Permanent link">&para;</a></h3>
+<p>Q：Born-Oppenheimer 近似的物理依据是什么？有什么代价？</p>
+<details><summary>A</summary>
+
+**依据**：质子质量 ≈ 1836 × 电子质量，电子运动比核快得多 → 可把核位置当参数（固定）求电子基态。**代价**：忽略核量子效应（如氢原子的隧穿、零点运动、重原子的非绝热效应）。**详见 `11-born-oppenheimer.md`**。
+</details>
+
+<h3 id="a8">A8<a class="headerlink" href="#a8" title="Permanent link">&para;</a></h3>
+<p>Q：为什么 DFT 系统性低估半导体带隙？</p>
+<details><summary>A</summary>
+
+**两个原因**：(1) DFT 本质是基态理论，带隙是激发态之间的差，严格来说不在 DFT 的正确适用范围内；(2) LDA/GGA 泛函的 self-interaction error 和 derivative discontinuity 缺失使计算带隙系统性偏小。**典型偏差**：Si 实验 1.17 eV → PBE ~0.6 eV（低估 ~50%）。HSE06 之类杂化泛函能部分修正。**详见 `15-xc-functional.md` 和 `30-observables.md` 组 2**。
+</details>
+
+<h3 id="a9">A9<a class="headerlink" href="#a9" title="Permanent link">&para;</a></h3>
+<p>Q：如果让你排序 12 步化简链对"最终精度"的影响由大到小，怎么排？</p>
+<details><summary>A</summary>
+
+参考排序（大致，具体依赖体系）：
+1. **化简 5 XC 泛函**（LDA vs PBE vs SCAN vs HSE06 差异可达 30%+，影响晶格 ~1%，带隙 ~50%）
+2. **化简 6 赝势**（不同赝势库/类型可导致几 % 能量差、几十 meV/atom）
+3. **化简 8 ecutwfc** 和 **化简 9 k 点**（截断不够直接让结果失效，像 Ge 案例）
+4. **化简 11 SCF 阈值**（conv_thr 太松导致力/应力不准）
+5. **化简 12 BFGS 阈值**（forc_conv_thr、press_conv_thr）
+6. **化简 10 对称性**（正确处理对称性能改善收敛，但一般不影响最终精度）
+7. **化简 1 BO**、**化简 2 Slater**、**化简 3 HK**、**化简 4 KS**、**化简 7 Bloch**（是理论框架，只要你用 KS-DFT 就是固定的）
+**详见所有笔记的末尾"典型取值与坑"节**。
+</details>
+
+<h3 id="a10">A10<a class="headerlink" href="#a10" title="Permanent link">&para;</a></h3>
+<p>Q：化简 8（平面波基组）与化简 9（k 点采样）的区别是什么？</p>
+<details><summary>A</summary>
+
+- **化简 8**：在**每个 k 点内部**，用有限个平面波展开 KS 轨道（`ecutwfc` 控制）。
+- **化简 9**：在**整个布里渊区**上，用有限个 k 点代替连续积分（`K_POINTS` 控制）。
+- 前者是"单个 k 点解的表达精度"，后者是"BZ 积分的采样密度"——两个维度的离散化。**详见 `18` 和 `19`**。
+</details>
+
+<hr />
+<h2 id="b-qe-15">第 B 部分：QE 字段的物理含义（15 题）<a class="headerlink" href="#b-qe-15" title="Permanent link">&para;</a></h2>
+<h3 id="b1">B1<a class="headerlink" href="#b1" title="Permanent link">&para;</a></h3>
+<p>Q：<code>ibrav=2</code>、<code>ibrav=4</code>、<code>ibrav=0</code> 分别表示什么？</p>
+<details><summary>A</summary>
+
+- `ibrav=2`：面心立方（FCC）——只需要 `celldm(1)=a`
+- `ibrav=4`：六方（Hexagonal）——需要 `celldm(1)=a`, `celldm(3)=c/a`
+- `ibrav=0`：自定义——必须显式给出 `CELL_PARAMETERS` 三行
+**详见 `17-bloch-bz.md`**。
+</details>
+
+<h3 id="b2">B2<a class="headerlink" href="#b2" title="Permanent link">&para;</a></h3>
+<p>Q：<code>ecutwfc</code> 和 <code>ecutrho</code> 的物理区别？比值应该是多少？</p>
+<details><summary>A</summary>
+
+- `ecutwfc`：波函数 $\phi$ 的平面波截断能。保留 $|\vec{G}|^2 < 2 E_{cut}/(\hbar^2/2m)$ 的平面波。
+- `ecutrho`：密度 $\rho = \sum |\phi_i|^2$ 的平面波截断能。因 $\rho$ 含两倍波矢量分量，高频项更多。
+- **比值**：norm-conserving 至少 4×；USPP/PAW 通常 8-12×。**详见 `18-plane-wave-basis.md`**。
+</details>
+
+<h3 id="b3">B3<a class="headerlink" href="#b3" title="Permanent link">&para;</a></h3>
+<p>Q：<code>K_POINTS automatic 8 8 8 0 0 0</code> 和 <code>8 8 8 1 1 1</code> 的区别？</p>
+<details><summary>A</summary>
+
+两者都是 Monkhorst-Pack 8×8×8 网格。
+- `0 0 0`：**gamma-centered**，网格包含 Γ 点 (0,0,0)
+- `1 1 1`：**half-shifted**（Monkhorst-Pack 原始偏移），网格偏离 Γ 点半个格距
+对大多数立方晶格两者差别小；对六方晶格 gamma-centered 通常更好；对存在 Γ 点特殊物理（如超导）必须 gamma-centered。**详见 `19-kpoints.md`**。
+</details>
+
+<h3 id="b4">B4<a class="headerlink" href="#b4" title="Permanent link">&para;</a></h3>
+<p>Q：<code>conv_thr = 1.0e-8</code> 的单位是什么？意味着什么？</p>
+<details><summary>A</summary>
+
+单位是 **Ry**（里德伯）。是 SCF 的电子能量收敛阈值——两次迭代能量差小于这个值就认为收敛。典型值：粗 `1e-6` Ry、标准 `1e-8` Ry、严格 `1e-10` Ry。严格阈值对 BFGS 弛豫很重要（松了会使力和应力不准）。**详见 `21-scf-iteration.md`**。
+</details>
+
+<h3 id="b5">B5<a class="headerlink" href="#b5" title="Permanent link">&para;</a></h3>
+<p>Q：<code>forc_conv_thr</code> 和 <code>etot_conv_thr</code> 在 vc-relax 中各自的作用是什么？</p>
+<details><summary>A</summary>
+
+- `forc_conv_thr`：所有原子受力 |F_I| < 阈值（Ry/bohr）时认为原子位置收敛。
+- `etot_conv_thr`：两次 BFGS 步间总能量变化 < 阈值（Ry）时认为能量收敛。
+两个条件必须同时满足 BFGS 才停止。对 vc-relax 还要加 `press_conv_thr`（kbar）。**详见 `22-bfgs-relax.md`**。
+</details>
+
+<h3 id="b6">B6<a class="headerlink" href="#b6" title="Permanent link">&para;</a></h3>
+<p>Q：<code>pseudo_dir</code> 指向什么？为什么 agent 跑 vc-relax 时相对路径会失效？</p>
+<details><summary>A</summary>
+
+指向赝势文件（`.upf`）所在目录。失效原因：DFTAgent 在 `tmp/<date>/<run_id>/` 子目录运行 QE，相对路径 `../PseudoDojo/...` 相对于运行目录解析——此时指到不存在的地方。**解决**：用绝对路径（已在 `config/config.yaml` 中修复）。**详见 `16-pseudopotential.md` 和 `doc/reports/report_qe_setup.md`**。
+</details>
+
+<h3 id="b7">B7<a class="headerlink" href="#b7" title="Permanent link">&para;</a></h3>
+<p>Q：<code>nspin=1</code> vs <code>nspin=2</code> 的区别？什么情况下必须用 <code>nspin=2</code>？</p>
+<details><summary>A</summary>
+
+- `nspin=1`：非自旋极化（spin-restricted），所有电子成对占据
+- `nspin=2`：自旋极化（spin-unrestricted），显式分 up/down 两套
+**必须用 `nspin=2`**：磁性材料（Fe, Co, Ni, NiO 等）、有未配对电子的原子（奇数电子体系）。通常配合 `starting_magnetization(i) = 0.5` 初始化。**详见 `14-kohn-sham.md` 和 `31-material-categories.md` 第 6 节**。
+</details>
+
+<h3 id="b8">B8<a class="headerlink" href="#b8" title="Permanent link">&para;</a></h3>
+<p>Q：<code>smearing='mv'</code> 是什么？什么时候要用？</p>
+<details><summary>A</summary>
+
+Methfessel-Paxton smearing（MV，冷 smearing 的一种）。为**金属**用——费米面附近占据数用光滑函数代替 0/1 阶跃，让 SCF 稳定收敛。其他选项：`gaussian`、`fd`（Fermi-Dirac）、`mp`。典型 `degauss=0.01-0.02` Ry。绝缘体不用（会改变物理结果）。**详见 `19-kpoints.md`**。
+</details>
+
+<h3 id="b9">B9<a class="headerlink" href="#b9" title="Permanent link">&para;</a></h3>
+<p>Q：<code>ATOMIC_POSITIONS crystal</code> 和 <code>ATOMIC_POSITIONS angstrom</code> 的区别？</p>
+<details><summary>A</summary>
+
+- `crystal`：分数坐标，即原子位置是晶格向量的线性组合系数（每个分量 0-1）
+- `angstrom`：笛卡尔坐标（Å 单位）
+- 其他：`bohr`（笛卡尔 bohr），`alat`（以 celldm(1) 为单位的笛卡尔）
+变胞弛豫（vc-relax）推荐用 `crystal`——因为晶格会变，分数坐标保持原子之间的相对位置稳定。**详见 `17-bloch-bz.md`**。
+</details>
+
+<h3 id="b10">B10<a class="headerlink" href="#b10" title="Permanent link">&para;</a></h3>
+<p>Q：<code>calculation='scf'</code>, <code>'nscf'</code>, <code>'bands'</code> 三者的关系？</p>
+<details><summary>A</summary>
+
+- `scf`：自洽求电子基态密度和能量
+- `nscf`：**非自洽**，用已收敛的 `scf` 密度，在**更密集或更细致的 k 点**上算本征值（不再更新密度）
+- `bands`：类似 `nscf`，但 k 点沿 BZ 高对称路径（用于画能带图）
+流程：`scf` → `nscf`（算 DOS）或 `bands`（画能带）。**详见 `17-bloch-bz.md` 和 `30-observables.md`**。
+</details>
+
+<h3 id="b11">B11<a class="headerlink" href="#b11" title="Permanent link">&para;</a></h3>
+<p>Q：<code>cell_dofree='all'</code> 和 <code>'xyz'</code> 有什么区别？</p>
+<details><summary>A</summary>
+
+- `all`：所有 6 个晶格自由度可变（3 长度 + 3 角度）
+- `xyz`：只允许晶格长度变化，角度固定
+- 其他：`'x'`、`'y'`、`'z'`、`'2Dxy'`（二维）、`'shape'`、`'ibrav'`（保持 Bravais 类型）
+立方材料选 `'ibrav'` 可减少自由度（保持对称性）；层状材料选 `'2Dxy'` 固定层间距。**详见 `22-bfgs-relax.md`**。
+</details>
+
+<h3 id="b12">B12<a class="headerlink" href="#b12" title="Permanent link">&para;</a></h3>
+<p>Q：<code>mixing_beta</code> 设多大合适？调它的信号是什么？</p>
+<details><summary>A</summary>
+
+- 绝缘体：0.7（激进）
+- 普通金属：0.3-0.5
+- 磁性/强关联：0.1-0.3
+- 信号：SCF 能量震荡不收敛 → 降 `mixing_beta`；SCF 平稳但慢 → 可适度提高
+**详见 `21-scf-iteration.md`**。
+</details>
+
+<h3 id="b13">B13<a class="headerlink" href="#b13" title="Permanent link">&para;</a></h3>
+<p>Q：<code>lspinorb=.true.</code> 什么时候用？会引入什么额外要求？</p>
+<details><summary>A</summary>
+
+开启自旋轨道耦合（SOC）。必要场合：**拓扑材料**（Bi, Bi₂Se₃, SnTe 等）、**重原子**（Pb, Au）的精细能带、**磁晶各向异性**。要求：(1) 用**全相对论（FR）赝势**，如 PseudoDojo 的 `FR_v0.4/`；(2) 通常配 `noncolin=.true.`（非共线磁性）。**详见 `31-material-categories.md` 第 8 节**。
+</details>
+
+<h3 id="b14">B14<a class="headerlink" href="#b14" title="Permanent link">&para;</a></h3>
+<p>Q：输出 <code>number of k points = 29</code> 表示什么？</p>
+<details><summary>A</summary>
+
+QE 检测空间群对称性后，把完整的 $8 \times 8 \times 8 = 512$ 个 k 点压缩到 29 个**不可约 k 点**（irreducible k-points）。只需在这 29 个点上解 KS 方程，其他 483 个由对称操作生成。对 FCC 晶体对称压缩比通常 48×。**详见 `20-symmetry.md`**。
+</details>
+
+<h3 id="b15">B15<a class="headerlink" href="#b15" title="Permanent link">&para;</a></h3>
+<p>Q：QE 输出的 <code>!    total energy = -16.92 Ry</code> 中的感叹号 <code>!</code> 是什么意思？</p>
+<details><summary>A</summary>
+
+`!` 是 QE 的标记，表示这是**最终收敛**的总能量（区别于 SCF 迭代中间步的 `total energy = ...`）。grep `!    total energy` 可以快速提取最终能量值。**详见 `21-scf-iteration.md`**。
+</details>
+
+<hr />
+<h2 id="c-dftbench-10">第 C 部分：DFTBench 设计逻辑（10 题）<a class="headerlink" href="#c-dftbench-10" title="Permanent link">&para;</a></h2>
+<h3 id="c1">C1<a class="headerlink" href="#c1" title="Permanent link">&para;</a></h3>
+<p>Q：DFTBench 评分的 10 个字段（<code>compare.py</code> 的 <code>COMPARISON_RULES</code>）分别来自 12 步化简链的哪一步？</p>
+<details><summary>A</summary>
+
+- `a, b, c, α, β, γ`（relative）← 化简 12 BFGS 输出的 `CELL_PARAMETERS`
+- `space_group, space_group_number, point_group, crystal_system`（exact）← 化简 10 对称性分析（pymatgen SpacegroupAnalyzer 作用于弛豫后的结构）
+**详见 `99-dftbench-terms.md` C 节**。
+</details>
+
+<h3 id="c2">C2<a class="headerlink" href="#c2" title="Permanent link">&para;</a></h3>
+<p>Q：benchmark 有 10 类材料，为什么磁性类的 LLM agent 通过率最低（论文 &lt;6%）？</p>
+<details><summary>A</summary>
+
+**多重难点叠加**：
+1. 必须显式设 `nspin=2`——agent 可能忘
+2. 必须设 `starting_magnetization(i)` 破缺对称性——agent 可能忘
+3. SCF 收敛困难（震荡、小 `mixing_beta`、大 `electron_maxstep`）
+4. 反铁磁需要超胞（原胞翻倍），原子位置翻倍，增加复杂度
+5. DFT+U 对 NiO、MnO 等强关联氧化物几乎必须——agent 难自动选 U 值
+**详见 `31-material-categories.md` 第 6 节**。
+</details>
+
+<h3 id="c3">C3<a class="headerlink" href="#c3" title="Permanent link">&para;</a></h3>
+<p>Q：为什么 <code>benchmark/questions/</code> 里有 <code>vc_relax_low_acc</code>、<code>_medium_acc</code>、<code>_high_acc</code> 三档？</p>
+<details><summary>A</summary>
+
+对应能量精度档：20 meV/atom（low）、10 meV/atom（medium）、1 meV/atom（high）。**意义**：1 meV/atom 需要严格参数（高 `ecutwfc`、密 k 点、严 `conv_thr`），**大多数 LLM agent 都只能满足 low 档**。这是 benchmark 区分能力的关键设计。**详见 `22-bfgs-relax.md`**。
+</details>
+
+<h3 id="c4">C4<a class="headerlink" href="#c4" title="Permanent link">&para;</a></h3>
+<p>Q：benchmark 的 <code>ground_truth</code> 字段为什么全空？这对评分意味着什么？</p>
+<details><summary>A</summary>
+
+作者在 2026-02 代码重构时丢失了参考值（详见 `doc/reports/report_ground_truth.md`），之后 30+ 提交都没恢复。后果：`compare_evaluation(gt={}, eval=...)` 在相对误差计算时分母 = `max(|0|, 1e-12)`，导致 `max_rel_error = inf`；exact 字段 gt 是 None，`str(None) != str(eval)` → `all_exact_match = False`。**一切评分无意义**。这正是我们要自制类 DFTBench 的原因。
+</details>
+
+<h3 id="c5">C5<a class="headerlink" href="#c5" title="Permanent link">&para;</a></h3>
+<p>Q：DFTBench 里 Si 的 <code>space_group=Fd-3m</code> 是怎么来的？agent 跑 vc-relax 后如何"得到"这个字段？</p>
+<details><summary>A</summary>
+
+材料 JSON 的 `info.space_group` 是**预先标注的已知值**（来自文献或 Materials Project）。agent 跑 vc-relax 后：QE 输出弛豫后的 `CELL_PARAMETERS` 和 `ATOMIC_POSITIONS` → DFTAgent 用 pymatgen 的 SpacegroupAnalyzer 分析结构 → 得到 `space_group` 字符串 → 与 ground truth 比较（exact match）。**详见 `20-symmetry.md`**。
+</details>
+
+<h3 id="c6">C6<a class="headerlink" href="#c6" title="Permanent link">&para;</a></h3>
+<p>Q：一个典型的 <code>vc_relax</code> prompt 长什么样？其中哪些部分是 LLM agent 要自动决定的？</p>
+<details><summary>A</summary>
+
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>For formula=Si structure=diamond atoms_per_primitive_cell=2 space_group=Fd-3m,
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>perform a variable-cell relaxation (vc-relax) calculation. Set use a gamma-centered grid,
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>make a educated guess for etot_conv_thr, forc_conv_thr, conv_thr, ecutwfc, k-point sampling.
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Use PBE pseudopotentials. Return the fully relaxed structure (atomic parameters).
+</span></code></pre></div>
+
+LLM 需要自动决定：
+- `ecutwfc` 具体值（Si 够用 40 Ry，Ge 不够）
+- k 点网格大小（如 8×8×8）
+- `conv_thr`、`etot_conv_thr`、`forc_conv_thr` 具体值
+- `ibrav`（从 structure=diamond 推断 ibrav=2）
+- 初始晶格常数 `celldm(1)`
+- 赝势文件名（如 `si.upf`）
+
+**详见 `99-dftbench-terms.md` B 节**。
+</details>
+
+<h3 id="c7">C7<a class="headerlink" href="#c7" title="Permanent link">&para;</a></h3>
+<p>Q：为什么 benchmark 里半导体类用 <code>structure=diamond/zinc blende/hexagonal</code> 而不是直接给 QE 的 <code>ibrav</code>？</p>
+<details><summary>A</summary>
+
+**抽象层设计**：晶体原型（diamond, zinc blende...）是**物理/材料科学术语**，一个原型可以对应多个数据库中的晶胞表示方式。给 `ibrav` 会让 benchmark 和 QE 耦合太深。LLM agent 需要**从原型推断 `ibrav`**——这是 benchmark 考查"参数推断"能力的一部分。**详见 `17-bloch-bz.md`**。
+</details>
+
+<h3 id="c8">C8<a class="headerlink" href="#c8" title="Permanent link">&para;</a></h3>
+<p>Q：一个好的 ground_truth 应该怎么生成？</p>
+<details><summary>A</summary>
+
+**理想流程**：
+1. 选择高精度参数（ecutwfc 做收敛性测试取收敛值、密 k 点、严 conv_thr、高精度泛函）
+2. 跑 vc-relax 到完全收敛
+3. 记录最终的 CELL_PARAMETERS（提取 a,b,c,α,β,γ）和 pymatgen 分析的空间群
+4. 对每个材料独立做，保留原始输入/输出文件以便复现
+5. 可以用 Materials Project 已有数据做交叉验证
+**注意**：LDA vs PBE 值不同；同一泛函不同赝势库也有差异。ground_truth 必须标明"用什么参数生成"。**详见 `15-xc-functional.md` 和 `16-pseudopotential.md`**。
+</details>
+
+<h3 id="c9">C9<a class="headerlink" href="#c9" title="Permanent link">&para;</a></h3>
+<p>Q：如果你要把 benchmark 的 10 类精简到 3 类做快速评估，选哪 3 类？为什么？</p>
+<details><summary>A</summary>
+
+建议：
+1. **金属**（Cu, Al）—— 验证 smearing + 密 k 点
+2. **半导体**（Si, GaAs）—— 标准测试，数据最全
+3. **磁性**（Fe, NiO）—— 压力测试（区分度最大）
+**跳过**：铁电、拓扑、超导、热电（需要特殊后处理不在评分核心），绝缘体（简单冗余），光学/压电（评分字段不涵盖）。**详见 `31-material-categories.md`**。
+</details>
+
+<h3 id="c10">C10<a class="headerlink" href="#c10" title="Permanent link">&para;</a></h3>
+<p>Q：如果让你设计一个新的评分字段，你会加什么？为什么？</p>
+<details><summary>A</summary>
+
+**候选**：
+1. **总能量**（`total_energy_ev_per_fu`）—— `required_ground_truth` 已有但 `compare.py` 未实现；相对误差评分可行（前提：泛函和赝势指定统一）
+2. **带隙**（`band_gap_ev`）—— 半导体/绝缘体区分能力核心；但 DFT 带隙低估系统性存在，ground_truth 应该按 PBE 而非实验值给
+3. **体模量 B**（`bulk_modulus_gpa`）—— 力学性质，需要 E-V 扫描
+4. **声子虚频**（`has_imaginary_freq`）—— 结构稳定性二值判断
+不要加：HOMO/LUMO（分子概念）、磁矩（材料相关，难一刀切）
+**详见 `30-observables.md` 和 `doc/reports/report_ground_truth.md`**。
+</details>
+
+<hr />
+<h2 id="d-debug-5">第 D 部分：实战 debug 题（5 题）<a class="headerlink" href="#d-debug-5" title="Permanent link">&para;</a></h2>
+<h3 id="d1">D1<a class="headerlink" href="#d1" title="Permanent link">&para;</a></h3>
+<p>Q：你的 Ge vc-relax 算出晶格常数 4.75 Å（参考值 5.66 Å，偏差 17%）。先看哪个参数？</p>
+<details><summary>A</summary>
+
+**先看 `ecutwfc`**。Ge 的 3d 半芯态需要 60+ Ry，40 Ry 基组不完备导致能量面失真。**其次检查**：赝势是否是 PBE（LDA 会低估 ~2%）、k 点是否足够（Ge 是半导体，6×6×6 通常够）。**详见 `16-pseudopotential.md` 和 `18-plane-wave-basis.md`**。
+</details>
+
+<h3 id="d2">D2<a class="headerlink" href="#d2" title="Permanent link">&para;</a></h3>
+<p>Q：SCF 跑 200 步还没收敛，能量在小幅震荡。怎么办？</p>
+<details><summary>A</summary>
+
+1. 降低 `mixing_beta`（从 0.7 → 0.3 → 0.1）
+2. 增大 `mixing_ndim`（4 → 8 → 16）
+3. 换 `mixing_mode='TF'` 或 `'local-TF'`
+4. 若是金属，检查有没有 smearing
+5. 若是磁性，检查 `starting_magnetization` 是否合理
+6. 检查初始结构是否合理（原子距离太近会让势能发散）
+**详见 `21-scf-iteration.md`**。
+</details>
+
+<h3 id="d3">D3<a class="headerlink" href="#d3" title="Permanent link">&para;</a></h3>
+<p>Q：BFGS 弛豫后 <code>space_group</code> 与 ground truth 不符，但晶格常数差异 &lt; 1%。可能原因？</p>
+<details><summary>A</summary>
+
+**可能原因**：
+1. 弛豫过程对称性轻微破缺（数值噪声）——pymatgen `symprec` 容忍度太小
+2. 原子位置有微小偏差（< 0.01 Å）未能识别成完美对称
+3. 变胞自由度太大让晶格从立方变到近立方——应考虑用 `cell_dofree='ibrav'` 保持对称性
+4. 若真是真实的对称性破缺（如铁电相变），ground truth 可能本来就错了
+**修复**：试 `symm_tol` 放宽到 1e-3，或后处理时放宽 `symprec`。**详见 `20-symmetry.md`**。
+</details>
+
+<h3 id="d4">D4<a class="headerlink" href="#d4" title="Permanent link">&para;</a></h3>
+<p>Q：你跑 <code>calculation='bands'</code>，但是想要的能带路径 Γ→X→L 的 L 点位置不对。问题在哪？</p>
+<details><summary>A</summary>
+
+L 点是**倒格矢空间**的高对称点，坐标依赖于晶格类型（FCC: L=(0.5, 0.5, 0.5) 的倒晶格坐标; BCC 不同）。常见错误：
+1. 用错 `K_POINTS crystal_b`（需要相对倒格矢）vs `tpiba_b`（笛卡尔，单位 $2\pi/\text{alat}$）
+2. 没用正确的 ibrav 对应的 BZ 路径
+**修复**：用 `seekpath`（Python 库）自动生成正确的高对称路径。**详见 `17-bloch-bz.md`**。
+</details>
+
+<h3 id="d5">D5<a class="headerlink" href="#d5" title="Permanent link">&para;</a></h3>
+<p>Q：你为 Fe 设 <code>nspin=2</code> 和 <code>starting_magnetization(1)=0.5</code>，但输出 <code>total magnetization = 0.000</code>。为什么？</p>
+<details><summary>A</summary>
+
+**可能原因**：
+1. `starting_magnetization` 设置太小，SCF 收敛到非磁解（全局极小可能是磁性，但局部极小可能是非磁）
+2. 对称性强制 up/down 等量——检查是否有 `nosym=.false.`（默认）导致禁止磁性破缺
+3. 计算的初始电荷/自旋密度叠加不对——试 `starting_magnetization(1)=1.0`
+4. 如果是超胞，可能需要 `starting_magnetization` 在不同原子位上给相反符号（反铁磁）
+**修复**：加大初始磁矩至接近实验值（Fe 约 2.2 μ_B），检查输出里有没有 "symm. ops" 过多的警告。**详见 `31-material-categories.md` 第 6 节**。
+</details>
+
+<hr />
+<h2 id="e-2">第 E 部分：综合题（2 题，大题）<a class="headerlink" href="#e-2" title="Permanent link">&para;</a></h2>
+<h3 id="e1">E1<a class="headerlink" href="#e1" title="Permanent link">&para;</a></h3>
+<p>Q：请用 2-3 分钟的时间，向一个不懂 DFT 但懂 ML 的同事解释 DFT 计算是在做什么。</p>
+<details><summary>提纲</summary>
+
+**30 秒框架**：给一堆原子，算能量/结构/电子性质。因为电子是量子粒子，N 电子是 3N 维问题，超高维爆炸。
+
+**1 分钟展开**：
+- 第一个关键洞察：HK 定理证明"3 维电子密度"能代替"3N 维波函数"——类似无损降维的理论存在性证明
+- 第二个关键洞察：Kohn-Sham 映射把"N 体耦合"变成"N 个单体 + 共享环境"——类似 mean-field 分解
+- 计算本身：SCF 自洽迭代 ≈ EM 算法；每次迭代用 Davidson 对角化 ≈ 求主成分
+- 外层：BFGS 调整原子位置 ≈ bilevel 优化；用 Hellmann-Feynman 定理（envelope theorem）免去对 SCF 求导的麻烦
+
+**1 分钟收尾**：
+- 不完美的部分：XC 泛函要近似（LDA/PBE/SCAN/HSE06）——像不同 backbone 网络
+- 工程问题：赝势（预训练 backbone）、平面波基组（Fourier features）、k 点（数值积分采样）
+- 这套东西每个材料组只要几秒-几分钟在 CPU 上，支撑了整个 Materials Project、催化、电池、半导体工业
+
+**详见 `00-simplification-chain.md`**。
+</details>
+
+<h3 id="e2">E2<a class="headerlink" href="#e2" title="Permanent link">&para;</a></h3>
+<p>Q：你现在要为自制的 DFTBench 生成 10 种半导体材料的 ground_truth，请列出完整的参数选择决策表。</p>
+<details><summary>提纲</summary>
+
+**泛函**：PBE（固体事实标准，与原 benchmark 对齐）
+**赝势**：PseudoDojo PBE stringent（.upf, norm-conserving ONCVPSP）——stringent > standard 精度档
+**对每种材料 ecutwfc 做收敛性测试**：扫 30, 40, 50, 60, 80 Ry，找能量差变化 < 1 meV/atom 的最小值
+- Si, GaAs, InP, ZnS, ZnSe, CdTe, AlP, BN(hex)：预计 50-60 Ry
+- Ge, C(diamond)：Ge 需要 60+（3d 半芯），C 需要 80+（小芯体积）
+**ecutrho**：4×ecutwfc（norm-conserving）
+**k 点**：所有 8×8×8（半导体原胞通常够）；可以对个别材料做收敛性测试验证
+**conv_thr**：1e-10 Ry（严格，确保力/应力精度）
+**vc-relax 参数**：
+- `etot_conv_thr = 1e-5 Ry`（~0.1 meV/atom）
+- `forc_conv_thr = 1e-5 Ry/bohr`
+- `press_conv_thr = 0.1 kbar`（严格）
+- `cell_dofree = 'all'`（让对称性保持由结构自己决定）
+- `cell_factor = 2.0`（应力准确度）
+**初始结构**：从 Materials Project 或 Crystallography Open Database 取实验/高精度 DFT 结构作初始（避免 BFGS 陷入错误极小）
+**验证**：
+- 跑两个不同 ecutwfc 看 lattice constant 差异 < 0.01 Å
+- 用 pymatgen 检查空间群是否与 ground_truth.info 一致
+- 和 Materials Project PBE 数据交叉验证
+**保留**：完整的 QE 输入/输出文件，以备复现和 debug
+
+**详见 `15-xc-functional.md`, `16-pseudopotential.md`, `18-plane-wave-basis.md`, `22-bfgs-relax.md`, `31-material-categories.md`**。
+</details>
+
+<hr />
+<h2 id="_1">评分与下一步<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>完成所有题目后，统计你能流利口述的比例：</p>
+<ul>
+<li><strong>≥ 90%</strong>：扎实掌握，可以进入 <code>diy-bench.md</code> 的 3.2 分析现有实现</li>
+<li><strong>80–90%</strong>：个别概念需要回读，但整体到位</li>
+<li><strong>60–80%</strong>：重点复习不熟章节，标记疑问点</li>
+<li><strong>&lt; 60%</strong>：建议从 <code>00-simplification-chain.md</code> 开始按顺序重读</li>
+</ul>
+<p>回到源仓库的 <code>todo/dft-literacy.md</code> 勾选阶段 D 的完成情况。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
